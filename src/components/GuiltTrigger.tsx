@@ -1,6 +1,6 @@
 "use client";
 
-import { useGuilt } from "@/context/GuiltContext";
+import { useGuilt, useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
@@ -29,7 +29,8 @@ const YORU_QUOTES = [
 ];
 
 export default function GuiltTrigger() {
-    const { guilt, addGuilt, activePersona, justTriggered, clearTrigger, signContract, combo, incCombo, resetCombo } = useGuilt();
+    const { guilt, activePersona, justTriggered, combo } = useGuiltState();
+    const { addGuilt, clearTrigger, signContract, incCombo, resetCombo } = useGuiltActions();
     const controls = useAnimationControls();
     const isYoru = activePersona === "Yoru";
 

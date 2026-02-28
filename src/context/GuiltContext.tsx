@@ -18,40 +18,28 @@ import { WEAPONS_DATA } from "@/constants/weapons";
 /** Las dos entidades que habitan el mismo cuerpo */
 export type Persona = "Asa" | "Yoru";
 
-interface GuiltContextType {
-    /** Nivel de culpa actual (0-100). El combustible del War Devil. */
+interface GuiltState {
     guilt: number;
-    /** Incrementa la culpa. Cada interacción dolorosa alimenta a Yoru. */
-    addGuilt: (amount: number) => void;
-    /** Resetea la culpa a 0. Un momento de paz temporal para Asa. */
-    resetGuilt: () => void;
-    /** Firma el contrato final para ceder el control a Yoru. */
-    signContract: () => void;
-    /** Indica si el contrato ha sido firmado. */
     isContractSigned: boolean;
-    /** Quién domina el DOM ahora: Asa (humana) o Yoru (demonio). */
     activePersona: Persona;
-    /** Indica si se acaba de activar el trigger de Yoru (para el efecto glitch). */
     justTriggered: boolean;
-    /** Limpia el flag de trigger después de que el glitch se reproduzca. */
-    clearTrigger: () => void;
-    /** Armas desbloqueadas por Yoru. */
     weapons: string[];
-    /** Desbloquea un arma específica. */
-    unlockWeapon: (weaponId: string) => void;
-    /** Combo actual de clics/interacciones. */
     combo: number;
-    /** Incrementa el combo. */
+}
+
+interface GuiltActions {
+    addGuilt: (amount: number) => void;
+    resetGuilt: () => void;
+    signContract: () => void;
+    clearTrigger: () => void;
+    unlockWeapon: (weaponId: string) => void;
     incCombo: () => void;
-    /** Resetea el combo. */
     resetCombo: () => void;
 }
 
-const GuiltContext = createContext<GuiltContextType | undefined>(undefined);
+const GuiltStateContext = createContext<GuiltState | undefined>(undefined);
+const GuiltActionsContext = createContext<GuiltActions | undefined>(undefined);
 
-/**
- * GuiltProvider — Envuelve la aplicación en la dualidad Asa/Yoru.
- */
 export function GuiltProvider({ children }: { children: React.ReactNode }) {
     const [guilt, setGuilt] = useState<number>(0);
     const [isContractSigned, setIsContractSigned] = useState<boolean>(false);
@@ -72,17 +60,11 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
     }, [guilt]);
 
     const addGuilt = useCallback((amount: number) => {
-        setGuilt((prev) => {
-            const next = Math.min(prev + amount, 100);
-            return next;
-        });
+        setGuilt((prev) => Math.min(prev + amount, 100));
     }, []);
 
     const unlockWeapon = useCallback((weaponId: string) => {
-        setWeapons((prev) => {
-            if (prev.includes(weaponId)) return prev;
-            return [...prev, weaponId];
-        });
+        setWeapons((prev) => prev.includes(weaponId) ? prev : [...prev, weaponId]);
     }, []);
 
     const signContract = useCallback(() => {
@@ -98,62 +80,56 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
         setCombo(0);
     }, []);
 
-    const incCombo = useCallback(() => {
-        setCombo(prev => prev + 1);
-    }, []);
+    const incCombo = useCallback(() => setCombo(prev => prev + 1), []);
+    const resetCombo = useCallback(() => setCombo(0), []);
+    const clearTrigger = useCallback(() => setJustTriggered(false), []);
 
-    const resetCombo = useCallback(() => {
-        setCombo(0);
-    }, []);
-
-    const clearTrigger = useCallback(() => {
-        setJustTriggered(false);
-    }, []);
-
-    // La persona activa depende de si el contrato fue firmado.
     const activePersona: Persona = useMemo(
         () => (isContractSigned ? "Yoru" : "Asa"),
         [isContractSigned]
     );
 
-    const value = useMemo(
-        () => ({
-            guilt,
-            addGuilt,
-            resetGuilt,
-            signContract,
-            isContractSigned,
-            activePersona,
-            justTriggered,
-            clearTrigger,
-            weapons,
-            unlockWeapon,
-            combo,
-            incCombo,
-            resetCombo,
-        }),
-        [guilt, addGuilt, resetGuilt, signContract, isContractSigned, activePersona, justTriggered, clearTrigger, weapons, unlockWeapon, combo, incCombo, resetCombo]
-    );
+    const stateValue = useMemo(() => ({
+        guilt,
+        isContractSigned,
+        activePersona,
+        justTriggered,
+        weapons,
+        combo,
+    }), [guilt, isContractSigned, activePersona, justTriggered, weapons, combo]);
+
+    const actionsValue = useMemo(() => ({
+        addGuilt,
+        resetGuilt,
+        signContract,
+        clearTrigger,
+        unlockWeapon,
+        incCombo,
+        resetCombo,
+    }), [addGuilt, resetGuilt, signContract, clearTrigger, unlockWeapon, incCombo, resetCombo]);
 
     return (
-        <GuiltContext.Provider value={value}>{children}</GuiltContext.Provider>
+        <GuiltStateContext.Provider value={stateValue}>
+            <GuiltActionsContext.Provider value={actionsValue}>
+                {children}
+            </GuiltActionsContext.Provider>
+        </GuiltStateContext.Provider>
     );
 }
 
-/**
- * useGuilt — Hook para acceder al estado de culpa desde cualquier componente.
- *
- * Como la voz de Yoru susurrando en la mente de Asa,
- * este hook permite que cualquier parte de la interfaz
- * "escuche" el nivel de culpa y reaccione en consecuencia.
- */
-export function useGuilt(): GuiltContextType {
-    const context = useContext(GuiltContext);
-    if (!context) {
-        throw new Error(
-            "useGuilt debe usarse dentro de un GuiltProvider. " +
-            "¿Intentas escapar del santuario? No hay escapatoria."
-        );
-    }
+export function useGuiltState() {
+    const context = useContext(GuiltStateContext);
+    if (!context) throw new Error("useGuiltState must be used within GuiltProvider");
     return context;
+}
+
+export function useGuiltActions() {
+    const context = useContext(GuiltActionsContext);
+    if (!context) throw new Error("useGuiltActions must be used within GuiltProvider");
+    return context;
+}
+
+// For backward compatibility while refactoring
+export function useGuilt() {
+    return { ...useGuiltState(), ...useGuiltActions() };
 }

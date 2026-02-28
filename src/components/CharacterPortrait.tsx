@@ -1,6 +1,6 @@
 "use client";
 
-import { useGuilt } from "@/context/GuiltContext";
+import { useGuilt, useGuiltState } from "@/context/GuiltContext";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import Image from "next/image";
 import { useState, useCallback } from "react";
@@ -87,7 +87,7 @@ const ASA_SLIDES: ImageSlide[] = [
 ];
 
 export default function CharacterPortrait() {
-    const { activePersona, guilt } = useGuilt();
+    const { activePersona, guilt } = useGuiltState();
     const isYoru = activePersona === "Yoru";
     const slides = isYoru ? YORU_SLIDES : ASA_SLIDES;
 
@@ -153,13 +153,13 @@ export default function CharacterPortrait() {
                 animate={{
                     ...shockControls,
                     scale: [1, 1.01, 1],
-                    x: jitterAmount > 0 ? [0, Math.random() * jitterAmount, -Math.random() * jitterAmount, 0] : 0,
-                    y: jitterAmount > 0 ? [0, -Math.random() * jitterAmount, Math.random() * jitterAmount, 0] : 0,
+                    x: jitterAmount > 0 ? [-jitterAmount, jitterAmount, -jitterAmount, 0] : 0,
+                    y: jitterAmount > 0 ? [jitterAmount, -jitterAmount, jitterAmount, 0] : 0,
                 }}
                 transition={{
                     scale: { duration: breathingDuration, repeat: Infinity, ease: "easeInOut" },
-                    x: { duration: 0.1, repeat: Infinity },
-                    y: { duration: 0.1, repeat: Infinity },
+                    x: { duration: 0.1, repeat: Infinity, ease: "linear" },
+                    y: { duration: 0.1, repeat: Infinity, ease: "linear" },
                 }}
                 className="relative"
             >
@@ -460,27 +460,34 @@ export default function CharacterPortrait() {
                 {/* ---- PARTÍCULAS DE ENERGÍA durante Yoru ---- */}
                 {isYoru && (
                     <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-20">
-                        {Array.from({ length: 6 }).map((_, i) => (
-                            <motion.div
-                                key={`particle-${i}`}
-                                className="absolute w-1.5 h-1.5 bg-[#DC143C] rounded-full"
-                                style={{
-                                    left: `${5 + Math.random() * 90}%`,
-                                    top: `${5 + Math.random() * 90}%`,
-                                }}
-                                animate={{
-                                    y: [0, -40 - Math.random() * 30, 0],
-                                    opacity: [0, 0.9, 0],
-                                    scale: [0, 1 + Math.random(), 0],
-                                }}
-                                transition={{
-                                    duration: 2.5 + Math.random() * 2,
-                                    repeat: Infinity,
-                                    delay: Math.random() * 3,
-                                    ease: "easeInOut",
-                                }}
-                            />
-                        ))}
+                        {Array.from({ length: 6 }).map((_, i) => {
+                            const delay = (i * 0.5);
+                            const duration = 2.5 + (i * 0.3);
+                            const yOffset = -40 - (i * 5);
+                            const scaleMax = 1 + (i * 0.2);
+
+                            return (
+                                <motion.div
+                                    key={`particle-${i}`}
+                                    className="absolute w-1.5 h-1.5 bg-[#DC143C] rounded-full"
+                                    style={{
+                                        left: `${5 + (i * 15) % 90}%`,
+                                        top: `${5 + (i * 13) % 90}%`,
+                                    }}
+                                    animate={{
+                                        y: [0, yOffset, 0],
+                                        opacity: [0, 0.9, 0],
+                                        scale: [0, scaleMax, 0],
+                                    }}
+                                    transition={{
+                                        duration: duration,
+                                        repeat: Infinity,
+                                        delay: delay,
+                                        ease: "easeInOut",
+                                    }}
+                                />
+                            );
+                        })}
                     </div>
                 )}
             </motion.div>
