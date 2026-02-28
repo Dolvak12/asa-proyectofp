@@ -1,6 +1,6 @@
 "use client";
 
-import { useGuilt, useGuiltState, useGuiltActions } from "@/context/GuiltContext";
+import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
@@ -30,31 +30,28 @@ const YORU_QUOTES = [
 
 export default function GuiltTrigger() {
     const { guilt, activePersona, justTriggered, combo } = useGuiltState();
-    const { addGuilt, clearTrigger, signContract, incCombo, resetCombo } = useGuiltActions();
+    const { addGuilt, clearTrigger, signContract, incCombo, resetCombo, startTransition } = useGuiltActions();
     const controls = useAnimationControls();
     const isYoru = activePersona === "Yoru";
 
     const [quoteIndex, setQuoteIndex] = useState(0);
     const [bangs, setBangs] = useState<{ id: number; x: number; y: number; size: number; rotate: number }[]>([]);
-    const [lastClick, setLastClick] = useState(0);
-
-    const [isHeartbeating, setIsHeartbeating] = useState(false);
-    const [showDamageFlash, setShowDamageFlash] = useState(false);
+    const [isSigning, setIsSigning] = useState(false);
+    const [signProgress, setSignProgress] = useState(0);
 
     // 1. EFECTO GLITCH MASIVO
     useEffect(() => {
         if (justTriggered) {
             controls.start({
-                x: [0, -20, 15, -10, 8, -5, 3, 0],
-                y: [0, 10, -15, 8, -5, 3, -2, 0],
-                opacity: [1, 0.2, 1, 0.1, 1, 0.3, 1, 1],
-                scale: [1, 1.02, 0.98, 1.03, 0.97, 1.01, 1],
-                transition: { duration: 1.2, ease: "easeInOut" },
+                x: [0, -15, 15, -8, 8, 0],
+                opacity: [1, 0.5, 1, 0.3, 1],
+                scale: [1, 1.05, 0.95, 1],
+                transition: { duration: 0.8 }
             }).then(() => clearTrigger());
         }
     }, [justTriggered, controls, clearTrigger]);
 
-    // 3. COMBO AUTO-RESET
+    // COMBO AUTO-RESET
     useEffect(() => {
         if (combo === 0) return;
         const timeout = setTimeout(() => {
@@ -66,208 +63,215 @@ export default function GuiltTrigger() {
     const handleGuiltClick = (e: React.MouseEvent) => {
         const now = Date.now();
 
-        // Visual Haptic Bump (The card itself jumps)
         controls.start({
-            scale: [1, 1.05, 1],
-            transition: { duration: 0.15, ease: "easeOut" }
+            scale: [1, 1.02, 1],
+            transition: { duration: 0.1 }
         });
 
-        // Camera Thump (Global-ish shake) - Desktop
-        if (typeof window !== "undefined" && window.innerWidth > 768) {
-            const root = document.documentElement;
-            root.style.transform = `translate(${(Math.random() - 0.5) * 10}px, ${(Math.random() - 0.5) * 10}px)`;
-            setTimeout(() => { root.style.transform = ""; }, 50);
-        }
-
-        // Mobile Visual Haptics
-        if (typeof window !== "undefined" && window.innerWidth <= 768) {
-            setShowDamageFlash(true);
-            setTimeout(() => setShowDamageFlash(false), 400);
-
-            // Visual Shake trigger via state or class if preferred, 
-            // but we can use controls for a more controlled "violent" shake
-            controls.start({
-                x: [0, -10, 10, -10, 10, 0],
-                transition: { duration: 0.2 }
-            });
-        }
-
-        // Manejo de Combo Global
         incCombo();
-        setLastClick(now);
 
         if (isYoru) {
             const newBang = {
                 id: now,
                 x: e.clientX + (Math.random() * 40 - 20),
                 y: e.clientY + (Math.random() * 40 - 20),
-                size: Math.random() * 4 + 2, // Varied size multiplier
+                size: Math.random() * 3 + 1.5,
                 rotate: Math.random() * 60 - 30
             };
             setBangs(prev => [...prev, newBang]);
-            setTimeout(() => setBangs(prev => prev.filter(b => b.id !== newBang.id)), 600);
+            setTimeout(() => setBangs(prev => prev.filter(b => b.id !== newBang.id)), 500);
             setQuoteIndex(prev => prev + 1);
             return;
         }
 
-        // Guilt Gain con Multiplicador
-        const baseGain = 10;
-        const bonus = Math.floor(combo / 5);
-        addGuilt(baseGain + bonus);
+        addGuilt(10 + Math.floor(combo / 4));
         setQuoteIndex(prev => prev + 1);
     };
 
-    const handleSignContract = () => {
-        setIsHeartbeating(true);
-        // Secuencia de latidos simulada
-        setTimeout(() => {
-            setIsHeartbeating(false);
-            signContract();
-        }, 3000);
-    };
+    const handleSignContract = useCallback(() => {
+        if (isSigning) return;
+        setIsSigning(true);
+        setSignProgress(0);
+
+        const interval = setInterval(() => {
+            setSignProgress(prev => {
+                if (prev >= 100) {
+                    clearInterval(interval);
+                    return 100;
+                }
+                return prev + 5; // Faster for better feel
+            });
+        }, 50);
+    }, [isSigning]);
+
+    // Handle completion of signing
+    useEffect(() => {
+        if (signProgress >= 100 && isSigning) {
+            startTransition(() => {
+                signContract();
+                setIsSigning(false);
+                setSignProgress(0);
+            });
+        }
+    }, [signProgress, isSigning, startTransition, signContract]);
 
     const currentQuote = isYoru
         ? YORU_QUOTES[quoteIndex % YORU_QUOTES.length]
         : ASA_QUOTES[quoteIndex % ASA_QUOTES.length];
 
     return (
-        <motion.div
-            animate={controls}
-            className={`relative w-full max-w-2xl mx-auto ${isYoru ? "cursor-crosshair" : "cursor-default"}`}
-        >
-            {/* Heartbeat Overlay */}
-            <AnimatePresence>
-                {isHeartbeating && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0, 0.4, 0, 0.6, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="fixed inset-0 bg-red-900 z-[9999] pointer-events-none mix-blend-multiply"
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* Damage Flash Overlay for Mobile */}
-            <AnimatePresence>
-                {showDamageFlash && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0, 0.4, 0] }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className={`fixed inset-0 z-[5000] pointer-events-none ${isYoru ? "bg-red-600/30" : "bg-black/10"}`}
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* Combo Heat Effect on Card */}
-            {combo > 5 && (
+        <motion.div animate={controls} className="relative w-full max-w-2xl mx-auto">
+            {/* Combo Heat Effect */}
+            {combo > 8 && (
                 <motion.div
-                    className="absolute -inset-2 rounded-2xl opacity-40 blur-lg -z-10"
-                    animate={{
-                        backgroundColor: ["rgba(220, 20, 60, 0)", "rgba(220, 20, 60, 0.5)", "rgba(220, 20, 60, 0)"],
-                        scale: [1, 1.05, 1]
-                    }}
-                    transition={{ repeat: Infinity, duration: 0.5 }}
+                    className="absolute -inset-4 rounded-3xl opacity-30 blur-2xl -z-10 bg-red-600"
+                    animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+                    transition={{ repeat: Infinity, duration: 0.4 }}
                 />
             )}
 
-            <motion.div
-                className={`relative z-0 rounded-2xl p-8 md:p-12 transition-all duration-700 ${isYoru
-                    ? "bg-[#0A0A0A] border-4 border-[#8B0000] shadow-[0_0_60px_rgba(139,0,0,0.4)]"
-                    : "bg-white/80 border border-[#1B263B]/15 shadow-lg"
-                    }`}
-                layout
-            >
-                {/* Combo Counter */}
+            <div className={`
+                relative z-10 rounded-3xl p-8 md:p-12 overflow-hidden
+                transition-all duration-700 
+                ${isYoru
+                    ? "bg-black border-4 border-[#DC143C] shadow-[0_0_80px_rgba(220,20,60,0.4)]"
+                    : "bg-white border-2 border-black shadow-[15px_15px_0px_rgba(0,0,0,1)]"
+                }
+            `}>
+                {/* Combo Label */}
                 <AnimatePresence>
                     {combo > 1 && (
                         <motion.div
-                            initial={{ scale: 0, opacity: 0, y: 20 }}
-                            animate={{
-                                scale: combo > 15 ? [1.2, 1.4, 1.2] : 1.2,
-                                opacity: 1,
-                                y: 0,
-                                rotate: combo > 15 ? [0, -2, 2, 0] : 0
-                            }}
+                            initial={{ scale: 0, x: 20 }}
+                            animate={{ scale: 1.2, x: 0 }}
                             exit={{ scale: 2, opacity: 0 }}
-                            transition={{
-                                rotate: { repeat: Infinity, duration: 0.1 },
-                                scale: { repeat: Infinity, duration: 0.4 }
-                            }}
-                            className={`absolute -top-12 right-0 font-black text-4xl italic ${combo > 15 ? 'text-orange-500 drop-shadow-[0_0_15px_rgba(255,165,0,0.8)]' : 'text-[#DC143C]'}`}
+                            className={`absolute top-6 right-8 font-black text-3xl italic ${isYoru ? 'text-[#DC143C]' : 'text-black'}`}
                             style={{ fontFamily: "var(--font-creepster)" }}
                         >
-                            {combo > 15 && (
-                                <motion.div
-                                    className="absolute inset-0 bg-orange-600/30 blur-xl rounded-full -z-10"
-                                    animate={{ scale: [1, 1.5, 1] }}
-                                    transition={{ repeat: Infinity, duration: 0.2 }}
-                                />
-                            )}
-                            x{combo} {combo > 15 ? "FEVER!" : "COMBO!"}
+                            x{combo}
                         </motion.div>
                     )}
                 </AnimatePresence>
 
-                <div className={`mb-6 flex items-center gap-2 ${isYoru ? "text-[#DC143C]" : "text-[#1B263B]/40"}`}>
-                    <span className="text-2xl">{isYoru ? "⚔" : "💭"}</span>
-                    <span className="text-xs font-mono uppercase tracking-[0.3em]">
-                        {isYoru ? "DEMONIO DE LA GUERRA CONTROLANDO" : "asa mitaka pensando..."}
+                <div className="mb-10 opacity-40 flex items-center gap-3">
+                    <span className="text-xl">{isYoru ? "⚔" : "🐚"}</span>
+                    <span className="text-[10px] uppercase font-black tracking-[0.5em]">
+                        {isYoru ? "POSESIÓN DEMONÍACA" : "MONÓLOGO INTERIOR"}
                     </span>
                 </div>
 
                 <motion.blockquote
                     key={`${activePersona}-${quoteIndex}`}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className={`text-xl md:text-2xl leading-relaxed mb-8 ${isYoru ? "text-[#F5F5F0] font-bold" : "text-[#1B263B] italic"}`}
-                    style={{ fontFamily: isYoru ? "var(--font-creepster)" : "var(--font-inter)" }}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`text-xl md:text-3xl leading-snug mb-12 ${isYoru ? "text-white" : "text-black"}`}
+                    style={{ fontFamily: isYoru ? "var(--font-creepster)" : "inherit" }}
                 >
                     &ldquo;{currentQuote}&rdquo;
                 </motion.blockquote>
 
-                <div className="flex flex-col items-center gap-4">
-                    {!isYoru && guilt === 100 ? (
+                <div className="flex flex-col items-center">
+                    {!isYoru && guilt >= 100 ? (
                         <motion.button
                             onClick={handleSignContract}
-                            className="px-10 py-6 text-2xl font-black rounded-none bg-black text-[#DC143C] border-4 border-[#DC143C] shadow-[10px_10px_0px_#DC143C] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-widest"
-                            style={{ fontFamily: "var(--font-creepster)" }}
-                            whileHover={{ scale: 1.05 }}
+                            className="w-full py-6 text-2xl font-black bg-black text-white border-4 border-[#DC143C] shadow-[10px_10px_0px_#DC143C] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                            whileHover={{ scale: 1.02 }}
                         >
-                            Firmar Contrato
+                            ENTREGAR MI CUERPO
                         </motion.button>
                     ) : (
                         <motion.button
                             onClick={handleGuiltClick}
-                            className={`px-8 py-4 text-lg font-bold rounded-xl transition-all duration-300 ${isYoru
-                                ? "bg-[#8B0000] text-[#F5F5F0] border-2 border-[#DC143C] shadow-[0_0_20px_rgba(220,20,60,0.4)]"
-                                : "bg-[#1B263B] text-[#F5F5F0] border border-[#1B263B]"
-                                }`}
-                            whileHover={isYoru ? { scale: 1.05 } : { scale: 0.95 }}
-                            whileTap={{ scale: 1.1 }}
+                            className={`
+                                px-10 py-5 text-lg font-black uppercase tracking-widest rounded-full
+                                transition-all duration-300
+                                ${isYoru
+                                    ? "bg-[#DC143C] text-white shadow-[0_0_30px_#DC143C]"
+                                    : "bg-black text-white hover:scale-95"
+                                }
+                            `}
+                            whileTap={{ scale: 1.2 }}
                         >
-                            {isYoru ? "BANG BANG BANG" : "Sentir Culpa (+20%)"}
+                            {isYoru ? "MATA A TODOS" : "HUNDIRSE EN CULPA"}
                         </motion.button>
                     )}
 
-                    <p className={`text-sm text-center ${isYoru ? "text-[#DC143C]/60" : "text-[#1B263B]/40"}`}>
-                        {isYoru
-                            ? "LA GUERRA HA COMENZADO."
-                            : `Nivel de culpa: ${guilt}%`}
-                    </p>
+                    <div className="mt-8 flex flex-col items-center gap-2">
+                        <div className="w-48 h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <motion.div
+                                className={`h-full ${isYoru ? 'bg-[#DC143C]' : 'bg-black'}`}
+                                animate={{ width: `${isYoru ? 100 : guilt}%` }}
+                            />
+                        </div>
+                        <p className={`text-[10px] font-bold uppercase tracking-widest ${isYoru ? 'text-[#DC143C]' : 'opacity-40'}`}>
+                            {isYoru ? "CONTROL TOTAL DEL DEMONIO" : `Nivel de trauma: ${guilt}%`}
+                        </p>
+                    </div>
                 </div>
-            </motion.div>
+            </div>
+
+            {/* Signing Modal */}
+            <AnimatePresence>
+                {isSigning && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[1000] bg-black/95 flex flex-col items-center justify-center p-8"
+                    >
+                        <motion.div
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ repeat: Infinity, duration: 0.3 }}
+                            className="text-white text-6xl md:text-9xl font-black mb-12 opacity-80"
+                            style={{ fontFamily: "var(--font-creepster)" }}
+                        >
+                            PACTO DE GUERRA
+                        </motion.div>
+
+                        <div className="w-full max-w-xl bg-white/10 h-4 rounded-full overflow-hidden mb-4">
+                            <motion.div
+                                className="h-full bg-[#DC143C] shadow-[0_0_20px_#DC143C]"
+                                style={{ width: `${signProgress}%` }}
+                            />
+                        </div>
+                        <p className="text-[#DC143C] font-mono text-xs uppercase tracking-[1em] animate-pulse">
+                            SELLANDO CONTRATO...
+                        </p>
+
+                        {/* Blood splatters */}
+                        {signProgress > 30 && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 1, scale: 1.5 }}
+                                className="absolute top-1/4 left-1/4 w-32 h-32 bg-red-700 rounded-full blur-3xl opacity-40 mix-blend-multiply"
+                            />
+                        )}
+                        {signProgress > 70 && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 1, scale: 2 }}
+                                className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-red-800 rounded-full blur-3xl opacity-40 mix-blend-multiply"
+                            />
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* BANG Texts */}
-            <div className="fixed inset-0 pointer-events-none z-[13000]">
+            <div className="fixed inset-0 pointer-events-none z-[2000]">
                 {bangs.map(b => (
                     <motion.div
                         key={b.id}
                         initial={{ opacity: 1, scale: 0.5, rotate: b.rotate }}
-                        animate={{ opacity: 0, scale: b.size, y: -150 }}
-                        className="absolute font-black text-[#DC143C] drop-shadow-[0_0_10px_rgba(220,20,60,0.8)]"
-                        style={{ left: b.x, top: b.y, fontFamily: "var(--font-creepster)", WebkitTextStroke: "1px white" }}
+                        animate={{ opacity: 0, scale: b.size, y: -200 }}
+                        className="absolute font-black text-[#DC143C]"
+                        style={{
+                            left: b.x,
+                            top: b.y,
+                            fontFamily: "var(--font-creepster)",
+                            fontSize: "6rem",
+                            textShadow: "0 0 20px rgba(220,20,60,0.8)"
+                        }}
                     >
                         BANG
                     </motion.div>
@@ -276,3 +280,4 @@ export default function GuiltTrigger() {
         </motion.div>
     );
 }
+

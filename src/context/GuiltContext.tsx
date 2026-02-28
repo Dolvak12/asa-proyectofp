@@ -25,6 +25,7 @@ interface GuiltState {
     justTriggered: boolean;
     weapons: string[];
     combo: number;
+    isTransitioning: boolean;
 }
 
 interface GuiltActions {
@@ -35,6 +36,7 @@ interface GuiltActions {
     unlockWeapon: (weaponId: string) => void;
     incCombo: () => void;
     resetCombo: () => void;
+    startTransition: (callback: () => void) => void;
 }
 
 const GuiltStateContext = createContext<GuiltState | undefined>(undefined);
@@ -46,6 +48,7 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
     const [justTriggered, setJustTriggered] = useState<boolean>(false);
     const [weapons, setWeapons] = useState<string[]>([]);
     const [combo, setCombo] = useState<number>(0);
+    const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
     // Auto-unlock weapons globally
     useEffect(() => {
@@ -58,6 +61,18 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
             }
         });
     }, [guilt]);
+
+    const startTransition = useCallback((callback: () => void) => {
+        setIsTransitioning(true);
+        // Delay the actual state change to mid-slash (approx 300ms)
+        setTimeout(() => {
+            callback();
+        }, 300);
+        // End transition after animation (approx 800ms total)
+        setTimeout(() => {
+            setIsTransitioning(false);
+        }, 800);
+    }, []);
 
     const addGuilt = useCallback((amount: number) => {
         setGuilt((prev) => Math.min(prev + amount, 100));
@@ -96,7 +111,8 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
         justTriggered,
         weapons,
         combo,
-    }), [guilt, isContractSigned, activePersona, justTriggered, weapons, combo]);
+        isTransitioning,
+    }), [guilt, isContractSigned, activePersona, justTriggered, weapons, combo, isTransitioning]);
 
     const actionsValue = useMemo(() => ({
         addGuilt,
@@ -106,7 +122,8 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
         unlockWeapon,
         incCombo,
         resetCombo,
-    }), [addGuilt, resetGuilt, signContract, clearTrigger, unlockWeapon, incCombo, resetCombo]);
+        startTransition,
+    }), [addGuilt, resetGuilt, signContract, clearTrigger, unlockWeapon, incCombo, resetCombo, startTransition]);
 
     return (
         <GuiltStateContext.Provider value={stateValue}>

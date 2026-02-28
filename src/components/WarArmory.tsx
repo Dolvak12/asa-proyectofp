@@ -1,21 +1,99 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useGuilt } from "@/context/GuiltContext";
+import { motion, AnimatePresence, useScroll, useSpring, useMotionValue, useTransform } from "framer-motion";
+import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { WEAPONS_DATA } from "@/constants/weapons";
 
-// ============================================================
-// WAR ARMORY — LA COLECCIÓN DE ARMAS DE YORU
-// ============================================================
+/**
+ * WEAPON CARD COMPONENT WITH 3D TILT
+ */
+function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+    const rotateX = useSpring(useTransform(y, [-100, 100], [10, -10]), { stiffness: 150, damping: 20 });
+    const rotateY = useSpring(useTransform(x, [-100, 100], [-10, 10]), { stiffness: 150, damping: 20 });
 
+    const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        x.set(e.clientX - centerX);
+        y.set(e.clientY - centerY);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay }}
+            onMouseMove={handleMouse}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                perspective: "1000px",
+                transformStyle: "preserve-3d"
+            }}
+            className={`
+                relative group overflow-hidden rounded-2xl aspect-[4/5]
+                border-2 transition-all duration-500 cursor-pointer
+                ${isUnlocked
+                    ? (isYoru ? 'border-[#DC143C]/40 bg-[#1A0505]/40 shadow-xl' : 'border-[#1B263B]/20 bg-white shadow-xl')
+                    : 'border-dashed border-gray-300 opacity-50 grayscale'
+                }
+            `}
+            onClick={onClick}
+        >
+            <motion.div
+                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+                className="w-full h-full relative"
+            >
+                {!isUnlocked && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px]">
+                        <span className="text-3xl mb-2">🔒</span>
+                        <span className="text-[10px] uppercase font-bold tracking-widest">Bloqueado</span>
+                        <span className="text-[8px] opacity-60">Control {weapon.unlockAt}%</span>
+                    </div>
+                )}
+
+                {isUnlocked && (
+                    <>
+                        <Image
+                            src={`/assets/weapons/${weapon.image}`}
+                            alt={weapon.name}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+
+                        {/* 3D Floating Title */}
+                        <div
+                            className="absolute bottom-0 left-0 right-0 p-6 z-20"
+                            style={{ transform: "translateZ(30px)" }}
+                        >
+                            <h3 className={`text-lg font-bold text-white`}>
+                                {weapon.name}
+                            </h3>
+                            <p className="text-[10px] opacity-50 text-white uppercase tracking-tighter">
+                                Click para inspeccionar
+                            </p>
+                        </div>
+                    </>
+                )}
+            </motion.div>
+        </motion.div>
+    );
+}
 
 export default function WarArmory() {
-    const { guilt, activePersona, unlockWeapon, weapons } = useGuilt();
+    const { activePersona, weapons } = useGuiltState();
     const isYoru = activePersona === "Yoru";
     const [selectedWeapon, setSelectedWeapon] = useState<typeof WEAPONS_DATA[0] | null>(null);
-
 
     return (
         <div className="w-full max-w-5xl mx-auto px-4 py-12">
@@ -35,58 +113,21 @@ export default function WarArmory() {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {WEAPONS_DATA.map((weapon, idx) => {
-                    const isUnlocked = weapons.includes(weapon.id);
-                    return (
-                        <motion.div
-                            key={weapon.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: idx * 0.1 }}
-                            className={`
-                                relative group overflow-hidden rounded-2xl aspect-[4/5]
-                                border-2 transition-all duration-500 cursor-pointer
-                                ${isUnlocked
-                                    ? (isYoru ? 'border-[#DC143C]/40 bg-[#1A0505]/40 shadow-lg shadow-red-900/10' : 'border-[#1B263B]/20 bg-white shadow-xl')
-                                    : 'border-dashed border-gray-300 opacity-50 grayscale'
-                                }
-                            `}
-                            onClick={() => isUnlocked && setSelectedWeapon(weapon)}
-                        >
-                            {!isUnlocked && (
-                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px]">
-                                    <span className="text-3xl mb-2">🔒</span>
-                                    <span className="text-[10px] uppercase font-bold tracking-widest">Bloqueado</span>
-                                    <span className="text-[8px] opacity-60">Control {weapon.unlockAt}%</span>
-                                </div>
-                            )}
-
-                            {isUnlocked && (
-                                <>
-                                    <Image
-                                        src={`/assets/weapons/${weapon.image}`}
-                                        alt={weapon.name}
-                                        fill
-                                        className="object-cover group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                                        <h3 className={`text-lg font-bold ${isYoru ? 'text-white' : 'text-white'}`}>
-                                            {weapon.name}
-                                        </h3>
-                                        <p className="text-[10px] opacity-50 text-white uppercase tracking-tighter">
-                                            Click para inspeccionar
-                                        </p>
-                                    </div>
-                                </>
-                            )}
-                        </motion.div>
-                    );
-                })}
+                {WEAPONS_DATA.map((weapon, idx) => (
+                    <WeaponCard
+                        key={weapon.id}
+                        weapon={weapon}
+                        isUnlocked={weapons.includes(weapon.id)}
+                        isYoru={isYoru}
+                        onClick={() => weapons.includes(weapon.id) && setSelectedWeapon(weapon)}
+                        delay={idx * 0.1}
+                    />
+                ))}
             </div>
 
-            {/* Modal de Inspección de Arma */}
+            {/* Modal remains same but updated with perspective on the content box */}
             <AnimatePresence>
+                {/* ... existing modal code ... */}
                 {selectedWeapon && (
                     <div className="fixed inset-0 z-[500] flex items-center justify-center p-4">
                         <motion.div

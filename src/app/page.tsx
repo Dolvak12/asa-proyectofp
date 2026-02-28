@@ -15,12 +15,14 @@ import InvasionOverlay from "@/components/InvasionOverlay";
 import CursedCursor from "@/components/CursedCursor";
 import YoruNotifications from "@/components/YoruNotifications";
 import WarArmory from "@/components/WarArmory";
-import { useGuilt } from "@/context/GuiltContext";
+import MangaSlash from "@/components/MangaSlash";
+import { useGuilt, useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, AnimatePresence, useScroll, useSpring, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { guilt, addGuilt, resetGuilt, signContract, activePersona, combo } = useGuilt();
+  const { guilt, isContractSigned, activePersona, combo } = useGuiltState();
+  const { addGuilt, resetGuilt, signContract } = useGuiltActions();
   const isYoru = activePersona === "Yoru";
   const [isBooting, setIsBooting] = useState(true);
 
@@ -88,6 +90,8 @@ export default function Home() {
         snap-y snap-mandatory overflow-y-auto scroll-smooth
       `}
     >
+      <MangaSlash />
+
       {/* Scroll progress rail */}
       <motion.div
         className={`fixed top-0 left-0 right-0 h-1 origin-left z-[200] ${isYoru ? "bg-gradient-to-r from-[#8B0000] via-[#DC143C] to-[#FF4444]" : "bg-gradient-to-r from-[#1B263B] to-[#2D4A7A]"}`}
