@@ -23,26 +23,28 @@ export default function InvasionOverlay() {
         let timeoutId: NodeJS.Timeout;
 
         const triggerGlitch = () => {
-            // Solo ocurre si hay culpa considerable o si ya estamos en modo Yoru
             if (guilt < 40 && !isYoru) return;
 
-            // Probabilidad basada en el nivel de culpa
-            const chance = isYoru ? 0.3 : (guilt / 200);
+            // HUGE increase in frequency
+            const chance = isYoru ? 0.8 : (guilt / 100);
 
             if (Math.random() < chance) {
-                const randomTop = Math.floor(Math.random() * 80) + "%";
-                const randomLeft = Math.floor(Math.random() * 80) + "%";
-                const randomScale = 0.5 + Math.random() * 1.5;
+                const randomTop = Math.floor(Math.random() * 60 + 20) + "%";
+                const randomLeft = Math.floor(Math.random() * 60 + 20) + "%";
+
+                // Bigger scaling
+                const randomScale = 1 + Math.random() * 1.5;
 
                 setOverlayPos({ top: randomTop, left: randomLeft, scale: randomScale });
                 setIsVisible(true);
 
                 if (timeoutId) clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => setIsVisible(false), 150 + Math.random() * 300);
+                timeoutId = setTimeout(() => setIsVisible(false), 200 + Math.random() * 400);
             }
         };
 
-        const interval = setInterval(triggerGlitch, 3000);
+        // Check every 1 second instead of 3
+        const interval = setInterval(triggerGlitch, 1000);
         return () => {
             clearInterval(interval);
             if (timeoutId) clearTimeout(timeoutId);
@@ -53,9 +55,9 @@ export default function InvasionOverlay() {
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    className="fixed inset-0 z-[60] pointer-events-none"
+                    className="fixed inset-0 z-[60] pointer-events-none overflow-hidden"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.8, 0.4, 1, 0] }}
+                    animate={{ opacity: [0, 0.9, 0.5, 1, 0] }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
                 >
@@ -63,7 +65,7 @@ export default function InvasionOverlay() {
                     <div className="absolute inset-0 bg-red-900/10 mix-blend-overlay" />
 
                     <motion.div
-                        className="absolute"
+                        className="absolute w-[150vw] md:w-[100vw] max-w-none flex justify-center items-center"
                         style={{
                             top: overlayPos.top,
                             left: overlayPos.left,
@@ -73,9 +75,11 @@ export default function InvasionOverlay() {
                         <Image
                             src="/images/ojosyoru.png"
                             alt="Yoru's Gaze"
-                            width={1200}
-                            height={400}
+                            width={1920}
+                            height={600}
+                            priority
                             className={`
+                                w-full h-auto object-cover
                                 invert sepia(100%) saturate(1000%) hue-rotate(320deg)
                                 ${isYoru ? "brightness(150%)" : "brightness(100%) opacity-60"}
                             `}
