@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   ],
   manifest: "/manifest.json",
   icons: {
-    icon: "/apple-icon.png",
-    apple: "/apple-icon.png",
+    icon: "/asa-icon.png",
+    apple: "/asa-icon.png",
   },
   openGraph: {
     title: "Guilty Sanctuary",
