@@ -26,9 +26,9 @@ export default function SecretLoreBook() {
 
     return (
         <>{/* Fragments handle multiple top-level elements */}
-            {/* BUTTON CONTAINER (Lower Layer) */}
-            <div className="fixed bottom-32 left-8 z-[100] pointer-events-none md:bottom-1/2 md:-translate-y-1/2 md:left-10">
-                <div className="flex flex-col gap-4 pointer-events-auto">
+            {/* BUTTON CONTAINER (Higher Layer right above everything) */}
+            <div className="fixed top-24 right-4 z-[100] pointer-events-none md:top-32 md:right-8">
+                <div className="flex flex-col items-end gap-4 pointer-events-auto">
                     {/* Enlace al Diario de Asa */}
                     <AnimatePresence>
                         {showDiaryLink && (

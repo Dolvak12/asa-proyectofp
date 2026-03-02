@@ -115,23 +115,6 @@ export default function MangaHaptics() {
                 )}
             </AnimatePresence>
 
-            {/* Speed Lines Overlay (Extreme Mode) */}
-            {isYoru && combo > 7 && (
-                <div
-                    className="absolute inset-0 pointer-events-none z-[-1] opacity-20"
-                    style={{
-                        background: `radial-gradient(circle, transparent 20%, #DC143C 100%), repeating-conic-gradient(from 0deg, transparent 0deg 10deg, rgba(220, 20, 60, 0.1) 10deg 20deg)`,
-                        animation: "spin 0.5s linear infinite"
-                    }}
-                />
-            )}
-
-            <style jsx>{`
-                @keyframes spin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-            `}</style>
         </div>
     );
 }

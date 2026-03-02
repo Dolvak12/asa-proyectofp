@@ -3,6 +3,7 @@
 import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 
 // ============================================================
@@ -30,7 +31,7 @@ const YORU_QUOTES = [
 
 export default function GuiltTrigger() {
     const { guilt, activePersona, justTriggered, combo } = useGuiltState();
-    const { addGuilt, clearTrigger, signContract, incCombo, resetCombo, startTransition } = useGuiltActions();
+    const { addGuilt, clearTrigger, signContract, incCombo, resetCombo, startTransition, playSlash } = useGuiltActions();
     const controls = useAnimationControls();
     const isYoru = activePersona === "Yoru";
 
@@ -71,15 +72,18 @@ export default function GuiltTrigger() {
         incCombo();
 
         if (isYoru) {
-            const newBang = {
-                id: now,
-                x: e.clientX + (Math.random() * 40 - 20),
-                y: e.clientY + (Math.random() * 40 - 20),
-                size: Math.random() * 3 + 1.5,
+            playSlash();
+            const newBangs = Array.from({ length: 3 }).map((_, i) => ({
+                id: now + i,
+                x: e.clientX + (Math.random() * 100 - 50),
+                y: e.clientY + (Math.random() * 100 - 50),
+                size: Math.random() * 2 + 1.5,
                 rotate: Math.random() * 60 - 30
-            };
-            setBangs(prev => [...prev, newBang]);
-            setTimeout(() => setBangs(prev => prev.filter(b => b.id !== newBang.id)), 500);
+            }));
+
+            setBangs(prev => [...prev, ...newBangs]);
+            setTimeout(() => setBangs(prev => prev.filter(b => !newBangs.find(n => n.id === b.id))), 600);
+
             setQuoteIndex(prev => prev + 1);
             return;
         }
@@ -192,7 +196,7 @@ export default function GuiltTrigger() {
                             `}
                             whileTap={{ scale: 1.2 }}
                         >
-                            {isYoru ? "MATA A TODOS" : "HUNDIRSE EN CULPA"}
+                            {isYoru ? "DISPARA" : "HUNDIRSE EN CULPA"}
                         </motion.button>
                     )}
 
@@ -257,26 +261,30 @@ export default function GuiltTrigger() {
                 )}
             </AnimatePresence>
 
-            {/* BANG Texts */}
-            <div className="fixed inset-0 pointer-events-none z-[2000]">
-                {bangs.map(b => (
-                    <motion.div
-                        key={b.id}
-                        initial={{ opacity: 1, scale: 0.5, rotate: b.rotate }}
-                        animate={{ opacity: 0, scale: b.size, y: -200 }}
-                        className="absolute font-black text-[#DC143C]"
-                        style={{
-                            left: b.x,
-                            top: b.y,
-                            fontFamily: "var(--font-creepster)",
-                            fontSize: "6rem",
-                            textShadow: "0 0 20px rgba(220,20,60,0.8)"
-                        }}
-                    >
-                        BANG
-                    </motion.div>
-                ))}
-            </div>
+            {/* BANG Texts through Portal so it's not trapped by layout transform */}
+            {typeof window !== "undefined" && createPortal(
+                <div className="fixed inset-0 pointer-events-none z-[99999]" style={{ width: '100vw', height: '100vh' }}>
+                    {bangs.map(b => (
+                        <motion.div
+                            key={b.id}
+                            initial={{ opacity: 1, scale: 0.5, rotate: b.rotate }}
+                            animate={{ opacity: 0, scale: b.size, y: b.y - 200 }}
+                            className="absolute font-black text-[#DC143C]"
+                            style={{
+                                left: b.x,
+                                top: b.y,
+                                fontFamily: "var(--font-creepster)",
+                                fontSize: "6rem",
+                                textShadow: "0 0 20px rgba(0,0,0,0.8)",
+                                transform: "translate(-50%, -50%)"
+                            }}
+                        >
+                            BANG
+                        </motion.div>
+                    ))}
+                </div>,
+                document.body
+            )}
         </motion.div>
     );
 }

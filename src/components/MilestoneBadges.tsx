@@ -50,7 +50,7 @@ export default function MilestoneBadges() {
 
 
     return (
-        <div className="fixed top-48 left-1/2 -translate-x-1/2 z-[200] pointer-events-none">
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[200] pointer-events-none">
             <AnimatePresence mode="wait">
                 {currentBadge && (
                     <motion.div
@@ -96,12 +96,6 @@ export default function MilestoneBadges() {
                                     <span className="text-lg md:text-xl font-black uppercase tracking-tighter text-white" style={{ fontFamily: "var(--font-creepster)" }}>
                                         {currentBadge.label}
                                     </span>
-                                </div>
-                                {/* Decorative lines */}
-                                <div className="flex flex-col gap-1 ml-4">
-                                    <div className="w-8 h-[2px] bg-black" />
-                                    <div className="w-12 h-[2px] bg-black" />
-                                    <div className="w-6 h-[2px] bg-black" />
                                 </div>
                             </div>
                         </div>
