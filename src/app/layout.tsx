@@ -43,6 +43,33 @@ export const metadata: Metadata = {
     "interactiva",
     "Tatsuki Fujimoto",
   ],
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/apple-icon.png",
+    apple: "/apple-icon.png",
+  },
+  openGraph: {
+    title: "Guilty Sanctuary",
+    description: "Una fanpage inmersiva de Chainsaw Man. Tu culpa alimenta al Demonio de la Guerra.",
+    url: "https://guilty-sanctuary.netlify.app",
+    siteName: "Guilty Sanctuary",
+    images: [
+      {
+        url: "/images/ojosyoru.png",
+        width: 1200,
+        height: 630,
+        alt: "La mirada de Yoru",
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Guilty Sanctuary — Chainsaw Man",
+    description: "Asa Mitaka × Yoru Fan Experience. Entra al santuario interactivo.",
+    images: ["/images/ojosyoru.png"],
+  },
 };
 
 export default function RootLayout({

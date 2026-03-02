@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const { guilt, isContractSigned, activePersona, combo } = useGuiltState();
-  const { addGuilt, resetGuilt, signContract } = useGuiltActions();
+  const { addGuilt, resetGuilt, signContract, initAudio, playHeartbeat } = useGuiltActions();
   const isYoru = activePersona === "Yoru";
   const [isBooting, setIsBooting] = useState(true);
 
@@ -84,8 +84,23 @@ export default function Home() {
     return () => window.clearTimeout(bootTimer);
   }, []);
 
+  // HEARTBEAT EFFECT
+  useEffect(() => {
+    if (guilt < 20 || isYoru) return;
+
+    // Faster heartbeat as guilt increases. Range: 1500ms -> 300ms
+    const intervalTime = Math.max(1500 - (guilt * 12), 300);
+
+    const interval = setInterval(() => {
+      playHeartbeat();
+    }, intervalTime);
+
+    return () => clearInterval(interval);
+  }, [guilt, isYoru, playHeartbeat]);
+
   return (
     <div
+      onPointerDown={initAudio}
       className={`relative min-h-[100dvh] transition-colors duration-1000 ${isYoru ? "bg-[#0A0A0A]" : "bg-gradient-to-b from-[#F6F6F2] to-[#ECEDE8]"} ${isYoru ? "chromatic-aberration-yoru" : ""}
         snap-y snap-mandatory overflow-y-auto scroll-smooth
       `}

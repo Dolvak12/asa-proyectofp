@@ -19,6 +19,15 @@ export default function ThemeSwitcher() {
         // Inyectar el tema activo en el elemento raíz del DOM
         // Cuando Yoru toma posesión, TODA la página se transforma
         document.documentElement.setAttribute("data-persona", activePersona);
+
+        // Actualizar dinámicamente el color de la barra del celular (PWA/Mobile Browser)
+        let metaThemeColor = document.querySelector("meta[name=theme-color]");
+        if (!metaThemeColor) {
+            metaThemeColor = document.createElement("meta");
+            metaThemeColor.setAttribute("name", "theme-color");
+            document.head.appendChild(metaThemeColor);
+        }
+        metaThemeColor.setAttribute("content", activePersona === "Yoru" ? "#0A0A0A" : "#F6F6F2");
     }, [activePersona]);
 
     return null; // Componente invisible — como la influencia de Yoru

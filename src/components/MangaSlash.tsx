@@ -1,7 +1,8 @@
 "use client";
 
-import { useGuiltState } from "@/context/GuiltContext";
+import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 
 /**
  * MangaSlash — Cinematic Transition Component
@@ -11,7 +12,14 @@ import { motion, AnimatePresence } from "framer-motion";
  */
 export default function MangaSlash() {
     const { isTransitioning, activePersona } = useGuiltState();
+    const { playSlash } = useGuiltActions();
     const isYoru = activePersona === "Yoru";
+
+    useEffect(() => {
+        if (isTransitioning) {
+            playSlash();
+        }
+    }, [isTransitioning, playSlash]);
 
     return (
         <AnimatePresence>

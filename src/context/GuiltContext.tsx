@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from "react";
 import { WEAPONS_DATA } from "@/constants/weapons";
+import { useAudio } from "@/hooks/useAudio";
 
 // ============================================================
 // GUILT CONTEXT — EL MOTOR DEL DUAL-STATE ENGINE
@@ -37,6 +38,12 @@ interface GuiltActions {
     incCombo: () => void;
     resetCombo: () => void;
     startTransition: (callback: () => void) => void;
+
+    // Audio Actions
+    initAudio: () => void;
+    playHeartbeat: () => void;
+    playSlash: () => void;
+    playGlitch: () => void;
 }
 
 const GuiltStateContext = createContext<GuiltState | undefined>(undefined);
@@ -49,6 +56,8 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
     const [weapons, setWeapons] = useState<string[]>([]);
     const [combo, setCombo] = useState<number>(0);
     const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+
+    const { initAudio, playHeartbeat, playSlash, playGlitch } = useAudio();
 
     // Auto-unlock weapons globally
     useEffect(() => {
@@ -123,7 +132,11 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
         incCombo,
         resetCombo,
         startTransition,
-    }), [addGuilt, resetGuilt, signContract, clearTrigger, unlockWeapon, incCombo, resetCombo, startTransition]);
+        initAudio,
+        playHeartbeat,
+        playSlash,
+        playGlitch,
+    }), [addGuilt, resetGuilt, signContract, clearTrigger, unlockWeapon, incCombo, resetCombo, startTransition, initAudio, playHeartbeat, playSlash, playGlitch]);
 
     return (
         <GuiltStateContext.Provider value={stateValue}>

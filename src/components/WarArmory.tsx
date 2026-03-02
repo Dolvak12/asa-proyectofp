@@ -92,6 +92,7 @@ function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
 
 export default function WarArmory() {
     const { activePersona, weapons } = useGuiltState();
+    const { playSlash } = useGuiltActions();
     const isYoru = activePersona === "Yoru";
     const [selectedWeapon, setSelectedWeapon] = useState<typeof WEAPONS_DATA[0] | null>(null);
 
@@ -119,7 +120,12 @@ export default function WarArmory() {
                         weapon={weapon}
                         isUnlocked={weapons.includes(weapon.id)}
                         isYoru={isYoru}
-                        onClick={() => weapons.includes(weapon.id) && setSelectedWeapon(weapon)}
+                        onClick={() => {
+                            if (weapons.includes(weapon.id)) {
+                                playSlash();
+                                setSelectedWeapon(weapon);
+                            }
+                        }}
                         delay={idx * 0.1}
                     />
                 ))}

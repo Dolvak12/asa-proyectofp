@@ -1,6 +1,6 @@
 "use client";
 
-import { useGuilt } from "@/context/GuiltContext";
+import { useGuilt, useGuiltActions } from "@/context/GuiltContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -14,6 +14,7 @@ import Image from "next/image";
  */
 export default function InvasionOverlay() {
     const { guilt, activePersona } = useGuilt();
+    const { playGlitch } = useGuiltActions();
     const [isVisible, setIsVisible] = useState(false);
     const [overlayPos, setOverlayPos] = useState({ top: "50%", left: "50%", scale: 1 });
 
@@ -29,6 +30,7 @@ export default function InvasionOverlay() {
             const chance = isYoru ? 0.8 : (guilt / 100);
 
             if (Math.random() < chance) {
+                playGlitch();
                 const randomTop = Math.floor(Math.random() * 60 + 20) + "%";
                 const randomLeft = Math.floor(Math.random() * 60 + 20) + "%";
 
