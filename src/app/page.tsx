@@ -16,6 +16,12 @@ import CursedCursor from "@/components/CursedCursor";
 import YoruNotifications from "@/components/YoruNotifications";
 import WarArmory from "@/components/WarArmory";
 import MangaSlash from "@/components/MangaSlash";
+import OnboardingTutorial from "@/components/OnboardingTutorial";
+import TabHijacker from "@/components/TabHijacker";
+import TextDecrypter from "@/components/TextDecrypter";
+import EasterEggListener from "@/components/EasterEggListener";
+import AtmosphericDust from "@/components/AtmosphericDust";
+import JumpscareOverlay from "@/components/JumpscareOverlay";
 import { useGuilt, useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, AnimatePresence, useScroll, useSpring, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -105,6 +111,7 @@ export default function Home() {
         snap-y snap-mandatory overflow-y-auto scroll-smooth
       `}
     >
+      <OnboardingTutorial />
       <MangaSlash />
 
       {/* Scroll progress rail */}
@@ -151,9 +158,13 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Background & Meta-Horror Layers */}
+      <AtmosphericDust />
+      <JumpscareOverlay />
       <InvasionOverlay />
       <CursedCursor />
       <YoruNotifications />
+      <TabHijacker />
+      <EasterEggListener />
 
       <InternalMonologue />
       <VignetteLayer />
@@ -202,7 +213,7 @@ export default function Home() {
                 fontFamily: isYoru ? "var(--font-creepster)" : "var(--font-inter)",
               }}
             >
-              {isYoru ? "EL DEMONIO HA DESPERTADO" : "Chainsaw Man Part 2 — Academy Saga"}
+              {isYoru ? <TextDecrypter text="EL DEMONIO HA DESPERTADO" /> : "Chainsaw Man Part 2 — Academy Saga"}
             </motion.p>
           </CorruptionLayer>
 
@@ -220,7 +231,7 @@ export default function Home() {
                 : "none",
             }}
           >
-            {isYoru ? "GUILTY SANCTUARY" : "Guilty Sanctuary"}
+            {isYoru ? <TextDecrypter text="GUILTY SANCTUARY" /> : "Guilty Sanctuary"}
           </motion.h1>
 
           {/* Descripción del proyecto */}
@@ -233,7 +244,7 @@ export default function Home() {
               `}
             >
               {isYoru
-                ? "Este santuario me pertenece ahora. Tu culpa me ha dado el poder. No hay vuelta atrás."
+                ? <TextDecrypter text="Este santuario me pertenece ahora. Tu culpa me ha dado el poder. No hay vuelta atrás." />
                 : "Dos mentes. Un cuerpo. Un santuario donde la culpa de Asa alimenta el poder de Yoru."
               }
             </motion.p>

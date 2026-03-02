@@ -40,8 +40,8 @@ function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
                 transformStyle: "preserve-3d"
             }}
             className={`
-                relative group overflow-hidden rounded-2xl aspect-[4/5]
-                border-2 transition-all duration-500 cursor-pointer
+                relative group overflow-hidden ${isYoru ? "rounded-none" : "rounded-2xl"} aspect-[4/5]
+                border-2 transition-all duration-500
                 ${isUnlocked
                     ? (isYoru ? 'border-[#DC143C]/40 bg-[#1A0505]/40 shadow-xl' : 'border-[#1B263B]/20 bg-white shadow-xl')
                     : 'border-dashed border-gray-300 opacity-50 grayscale'
@@ -149,7 +149,7 @@ export default function WarArmory() {
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
                             className={`
-                                relative z-10 w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl flex flex-col md:flex-row
+                                relative z-10 w-full max-w-4xl max-h-[90vh] overflow-hidden ${isYoru ? "rounded-none" : "rounded-3xl"} flex flex-col md:flex-row
                                 border shadow-2xl
                                 ${isYoru ? 'bg-[#0A0A0A] border-red-900/50' : 'bg-white border-blue-900/10'}
                             `}

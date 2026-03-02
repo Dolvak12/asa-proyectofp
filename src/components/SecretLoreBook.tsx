@@ -6,6 +6,7 @@ import { useState, useCallback } from "react";
 import Image from "next/image";
 import { WEAPONS_DATA } from "@/constants/weapons";
 import MangaHaptics from "./MangaHaptics";
+import TextDecrypter from "./TextDecrypter";
 
 /**
  * SECRET LORE BOOK — Diario de Asa y Armería de Yoru
@@ -180,13 +181,13 @@ export default function SecretLoreBook() {
                                                 {!isUnlocked && <span className="text-[8px] opacity-40">Lvl {weapon.unlockAt}%</span>}
                                             </h3>
                                             <p className="text-[10px] text-white/50 leading-tight">
-                                                {isUnlocked ? weapon.description : "Contenido secreto oculto tras la culpa."}
+                                                {isUnlocked ? <TextDecrypter text={weapon.description} /> : "Contenido secreto oculto tras la culpa."}
                                             </p>
                                         </motion.div>
                                     );
                                 })}
                             </div>
-                            <p className="text-[10px] text-[#DC143C]/40 uppercase mt-6 tracking-[0.3em]">Todo lo que me pertenece se convierte en mi arma.</p>
+                            <p className="text-[10px] text-[#DC143C]/40 uppercase mt-6 tracking-[0.3em]"><TextDecrypter text="Todo lo que me pertenece se convierte en mi arma." /></p>
                         </motion.div>
                     </motion.div>
                 )}

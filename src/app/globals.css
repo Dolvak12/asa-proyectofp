@@ -63,8 +63,8 @@ body {
    Cuando el demonio toma el control, hasta el cursor
    se transforma en algo amenazante. El usuario SIENTE
    que está bajo la mirada depredadora de Yoru. */
-:root[data-persona="Yoru"] body {
-  cursor: crosshair;
+:root[data-persona="Yoru"] *, :root[data-persona="Yoru"] body {
+  cursor: crosshair !important;
 }
 
 /* ---- Scrollbar personalizado ---- */
