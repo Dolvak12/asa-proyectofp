@@ -1,6 +1,7 @@
 "use client";
 
 import { useGuilt } from "@/context/GuiltContext";
+import { TRANSLATIONS } from "@/constants/translations";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ============================================================
@@ -16,7 +17,8 @@ import { motion, AnimatePresence } from "framer-motion";
 // ============================================================
 
 export default function Header() {
-    const { guilt, activePersona, resetGuilt } = useGuilt();
+    const { guilt, activePersona, resetGuilt, language } = useGuilt();
+    const t = TRANSLATIONS;
 
     // Determinar si estamos en modo Yoru (demonio activo)
     const isYoru = activePersona === "Yoru";
@@ -94,10 +96,9 @@ export default function Header() {
                                         : "bg-[#1B263B]/10 text-[#1B263B]/60 hover:bg-[#1B263B]/20 hover:text-[#1B263B]"
                                     }
                 `}
-                                whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                Reset
+                                {isYoru ? "FIN DEL SANTUARIO" : t["header.reset"][language]}
                             </motion.button>
                         )}
                     </div>
@@ -106,10 +107,10 @@ export default function Header() {
                 {/* ---- NAVEGACIÓN "HAUNTED" ---- */}
                 <nav className="flex items-center justify-center gap-6 md:gap-12 py-1">
                     {[
-                        { asa: "Inicio", yoru: "PRISIÓN", id: "nav-home" },
-                        { asa: "El Diario", yoru: "PECES MUERTOS", id: "nav-lore" },
-                        { asa: "Armería", yoru: "CADÁVERES", id: "nav-armory" },
-                        { asa: "Santuario", yoru: "INFIERNO", id: "nav-sanctuary" }
+                        { asa: t["header.nav.home_asa"][language], yoru: t["header.nav.home_yoru"][language], id: "nav-home" },
+                        { asa: t["header.nav.lore_asa"][language], yoru: t["header.nav.lore_yoru"][language], id: "nav-lore" },
+                        { asa: t["header.nav.armory_asa"][language], yoru: t["header.nav.armory_yoru"][language], id: "nav-armory" },
+                        { asa: t["header.nav.sanctuary_asa"][language], yoru: t["header.nav.sanctuary_yoru"][language], id: "nav-sanctuary" }
                     ].map((item) => (
                         <motion.a
                             key={item.id}
@@ -156,7 +157,7 @@ export default function Header() {
                 ${isYoru ? "text-[#DC143C]/70" : "text-[#1B263B]/50"}
               `}
                         >
-                            {isYoru ? "PODER DE YORU" : "Medidor de Culpa"}
+                            {isYoru ? t["header.yoru_power"][language] : t["header.guilt_meter"][language]}
                         </span>
                         <motion.span
                             className={`

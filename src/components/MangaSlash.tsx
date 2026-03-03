@@ -1,6 +1,7 @@
 "use client";
 
 import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
+import { TRANSLATIONS } from "@/constants/translations";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 
@@ -11,9 +12,10 @@ import { useEffect } from "react";
  * across the screen to signify a personality shift or major event.
  */
 export default function MangaSlash() {
-    const { isTransitioning, activePersona } = useGuiltState();
+    const { isTransitioning, activePersona, language } = useGuiltState();
     const { playSlash } = useGuiltActions();
     const isYoru = activePersona === "Yoru";
+    const t = TRANSLATIONS;
 
     useEffect(() => {
         if (isTransitioning) {
@@ -79,7 +81,7 @@ export default function MangaSlash() {
                         className="absolute inset-0 flex items-center justify-center font-black italic text-white text-6xl md:text-8xl drop-shadow-[0_0_20px_rgba(0,0,0,1)]"
                         style={{ fontFamily: "var(--font-creepster)" }}
                     >
-                        {isYoru ? "ズバッ!" : "SHINK!"}
+                        {isYoru ? t["slash.yoru"][language] : t["slash.asa"][language]}
                     </motion.div>
                 </div>
             )}

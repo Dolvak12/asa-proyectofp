@@ -212,7 +212,46 @@ export const TRANSLATIONS = {
             "SHE BELONGS TO ME.",
             "MORE WAR."
         ]
-    }
+    },
+    // Nuevas traducciones globales (Header, Notificaciones, etc.)
+    "header.reset": { es: "Reset", en: "Reset" },
+    "header.yoru_power": { es: "PODER DE YORU", en: "YORU'S POWER" },
+    "header.guilt_meter": { es: "Medidor de Culpa", en: "Guilt Meter" },
+    "header.nav.home_asa": { es: "Inicio", en: "Home" },
+    "header.nav.home_yoru": { es: "PRISIÓN", en: "PRISON" },
+    "header.nav.lore_asa": { es: "El Diario", en: "The Diary" },
+    "header.nav.lore_yoru": { es: "PECES MUERTOS", en: "DEAD FISH" },
+    "header.nav.armory_asa": { es: "Armería", en: "Armory" },
+    "header.nav.armory_yoru": { es: "CADÁVERES", en: "CORPSES" },
+    "header.nav.sanctuary_asa": { es: "Santuario", en: "Sanctuary" },
+    "header.nav.sanctuary_yoru": { es: "INFIERNO", en: "HELL" },
+
+    "yoru_alerts": {
+        es: ["TE ESTOY VIENDO.", "LA CULPA ES MÍA.", "NO PUEDES HUIR.", "MIRA LA PANTALLA."],
+        en: ["I AM WATCHING YOU.", "THE GUILT IS MINE.", "YOU CANNOT RUN.", "LOOK AT THE SCREEN."]
+    },
+    "thoughts": {
+        es: ["¿Por qué soy así?", "Nadie me entiende...", "Todo fue mi culpa.", "Quiero desaparecer.", "No merezco vivir."],
+        en: ["Why am I like this?", "Nobody understands me...", "It was all my fault.", "I want to disappear.", "I don't deserve to live."]
+    },
+    "badges.unlocked": { es: "Desbloqueada", en: "Unlocked" },
+    "badges.pact": { es: "Pacto de sangre", en: "Blood Pact" },
+    "badges.guilt": { es: "de Culpa", en: "of Guilt" },
+    "badges.fusion": { es: "Fusión Completa", en: "Complete Fusion" },
+
+    "slash.yoru": { es: "ズバッ!", en: "SLASH!" },
+    "slash.asa": { es: "SHINK!", en: "SHINK!" },
+
+    "haptics.asa": {
+        es: ["ドっ", "あ...", "ふわッ", "びくッ", "・・・"],
+        en: ["Thud", "Ah...", "Fluff", "Twitch", "..."]
+    },
+    "haptics.yoru": {
+        es: ["バン!", "ズバッ!", "ガキン!", "血", "死"],
+        en: ["BANG!", "SLASH!", "CLANG!", "Blood", "Death"]
+    },
+    "cursor.asa": { es: "Asa", en: "Asa" },
+    "cursor.yoru": { es: "Miedo", en: "Fear" }
 } as const;
 
 export const CHARACTER_LORE = {

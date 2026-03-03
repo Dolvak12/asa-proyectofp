@@ -151,7 +151,7 @@ export default function SecretLoreBook() {
                                             whileHover={isUnlocked ? { scale: 1.02, rotate: 1 } : {}}
                                             className={`border-2 p-4 transition-all group relative overflow-hidden ${isUnlocked
                                                 ? "border-[#DC143C] bg-[#1A0505]/40"
-                                                : "border-[#DC143C]/10 opacity-40 grayscale"
+                                                : "border-[#DC143C]/10 opacity-40 grayscale transition-all duration-300 md:group-hover:opacity-100 md:group-hover:grayscale-0 group-active:opacity-100 group-active:grayscale-0"
                                                 }`}
                                         >
                                             <div className="w-full h-40 bg-neutral-900 mb-4 flex items-center justify-center relative overflow-hidden">

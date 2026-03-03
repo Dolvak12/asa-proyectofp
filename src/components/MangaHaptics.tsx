@@ -1,6 +1,7 @@
 "use client";
 
 import { useGuilt } from "@/context/GuiltContext";
+import { TRANSLATIONS } from "@/constants/translations";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,14 +22,14 @@ interface Onomatopoeia {
     scale: number;
 }
 
-const ASA_SOUNDS = ["ドっ", "あ...", "ふわッ", "びくッ", "・・・"];
-const YORU_SOUNDS = ["ズバッ", "バン!", "ゴゴゴ", "ドガッ", "ザシュ!", "震", "死!"];
-
 export default function MangaHaptics() {
-    const { activePersona, combo } = useGuilt();
+    const { activePersona, combo, language } = useGuilt();
     const isYoru = activePersona === "Yoru";
     const [sounds, setSounds] = useState<Onomatopoeia[]>([]);
     const [showFlash, setShowFlash] = useState(false);
+    const t = TRANSLATIONS;
+    const ASA_SOUNDS = t["haptics.asa"][language];
+    const YORU_SOUNDS = t["haptics.yoru"][language];
 
     const spawnSound = useCallback((x: number, y: number) => {
         const pool = isYoru ? YORU_SOUNDS : ASA_SOUNDS;

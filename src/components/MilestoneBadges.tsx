@@ -4,16 +4,16 @@ import { useGuilt } from "@/context/GuiltContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const MILESTONES = [
-    { threshold: 20, label: "Socialmente Ansiosa", color: "#1B263B", detail: "LOGRO" },
-    { threshold: 30, label: "Diario Desbloqueado", color: "#1B263B", detail: "NUEVO" },
-    { threshold: 50, label: "Anfitriona de la Guerra", color: "#8B0000", detail: "LOGRO" },
-    { threshold: 80, label: "Inestabilidad Total", color: "#DC143C", detail: "PELIGRO" },
-    { threshold: 100, label: "Yoru Ascendente", color: "#000000", detail: "CONTRATO" },
+const getMilestones = (lang: "es" | "en") => [
+    { threshold: 20, label: lang === "es" ? "Socialmente Ansiosa" : "Socially Anxious", color: "#1B263B", detail: lang === "es" ? "LOGRO" : "ACHIEVEMENT" },
+    { threshold: 30, label: lang === "es" ? "Diario Desbloqueado" : "Diary Unlocked", color: "#1B263B", detail: lang === "es" ? "NUEVO" : "NEW" },
+    { threshold: 50, label: lang === "es" ? "Anfitriona de la Guerra" : "Host of War", color: "#8B0000", detail: lang === "es" ? "LOGRO" : "ACHIEVEMENT" },
+    { threshold: 80, label: lang === "es" ? "Inestabilidad Total" : "Total Instability", color: "#DC143C", detail: lang === "es" ? "PELIGRO" : "DANGER" },
+    { threshold: 100, label: lang === "es" ? "Yoru Ascendente" : "Yoru Ascendant", color: "#000000", detail: lang === "es" ? "CONTRATO" : "CONTRACT" },
 ];
 
 export default function MilestoneBadges() {
-    const { guilt, activePersona } = useGuilt();
+    const { guilt, activePersona, language } = useGuilt();
     const [currentBadge, setCurrentBadge] = useState<{ label: string; detail: string } | null>(null);
     const [achieved, setAchieved] = useState<string[]>([]);
 
@@ -26,7 +26,7 @@ export default function MilestoneBadges() {
     }, [guilt]);
 
     useEffect(() => {
-        const milestone = MILESTONES.find(m => guilt >= m.threshold && !achieved.includes(m.label));
+        const milestone = getMilestones(language).find(m => guilt >= m.threshold && !achieved.includes(m.label));
 
         if (milestone) {
             setAchieved(prev => [...prev, milestone.label]);
@@ -35,18 +35,18 @@ export default function MilestoneBadges() {
             const timer = setTimeout(() => setCurrentBadge(null), 4000);
             return () => clearTimeout(timer);
         }
-    }, [guilt, achieved]);
+    }, [guilt, achieved, language]);
 
     // Alerta especial cuando Yoru se activa
     useEffect(() => {
         if (activePersona === "Yoru" && guilt > 0 && !achieved.includes("ARMERÍA")) {
             setAchieved(prev => [...prev, "ARMERÍA"]);
-            setCurrentBadge({ label: "Armería de Guerra", detail: "DESBLOQUEADA" });
+            setCurrentBadge({ label: language === "es" ? "Armería de Guerra" : "War Armory", detail: language === "es" ? "DESBLOQUEADA" : "UNLOCKED" });
 
             const timer = setTimeout(() => setCurrentBadge(null), 4000);
             return () => clearTimeout(timer);
         }
-    }, [activePersona, achieved, guilt]);
+    }, [activePersona, achieved, guilt, language]);
 
 
     return (

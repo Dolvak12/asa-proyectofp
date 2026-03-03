@@ -3,7 +3,7 @@
 import { useGuiltState } from "@/context/GuiltContext";
 import { motion, AnimatePresence, useAnimationControls, useMotionValue, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import SeaFactBubble from "./SeaFactBubble";
 
 // ============================================================
@@ -123,6 +123,16 @@ export default function CharacterPortrait() {
         setCurrentSlide((prev) => Math.max(prev - 1, 0));
     }, []);
 
+    // Auto-revert to main slide so it doesn't stay forever
+    useEffect(() => {
+        if (currentSlide > 0) {
+            const timer = setTimeout(() => {
+                setCurrentSlide(0);
+            }, 6000); // 6 seconds to read
+            return () => clearTimeout(timer);
+        }
+    }, [currentSlide]);
+
     return (
         <div
             className="relative flex items-center justify-center p-4 md:p-8"
@@ -157,13 +167,13 @@ export default function CharacterPortrait() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="absolute inset-0"
+                        className={`absolute inset-0 ${currentData.src.includes('asa2') ? 'bg-black' : ''}`}
                     >
                         <Image
                             src={currentData.src}
                             alt={currentData.alt[language]}
                             fill
-                            className="object-cover"
+                            className={currentData.src.includes('asa2') ? 'object-contain' : 'object-cover'}
                             priority
                         />
                     </motion.div>

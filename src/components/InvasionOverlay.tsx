@@ -27,7 +27,7 @@ export default function InvasionOverlay() {
             if (guilt < 40 && !isYoru) return;
 
             // Reduced frequency to be subtle and not annoying
-            const chance = isYoru ? 0.05 : (guilt / 300);
+            const chance = isYoru ? 0.015 : (guilt / 400);
 
             if (Math.random() < chance) {
                 playGlitch();
@@ -45,8 +45,8 @@ export default function InvasionOverlay() {
             }
         };
 
-        // Check every 6 seconds to be much less intrusive
-        const interval = setInterval(triggerGlitch, 6000);
+        // Check every 10 seconds to be much less intrusive
+        const interval = setInterval(triggerGlitch, 10000);
         return () => {
             clearInterval(interval);
             if (timeoutId) clearTimeout(timeoutId);

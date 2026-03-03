@@ -52,9 +52,10 @@ function WeaponCard({ weapon, isUnlocked, isYoru, language, onClick, delay }: {
                 border-2 transition-all duration-500
                 ${isUnlocked
                     ? (isYoru ? 'border-[#DC143C]/40 bg-[#1A0505]/40 shadow-xl' : 'border-[#1B263B]/20 bg-white shadow-xl')
-                    : 'border-dashed border-gray-300 opacity-50 grayscale'
+                    : 'border-dashed border-gray-300 opacity-50 grayscale transition-all duration-300 md:group-hover:opacity-100 md:group-hover:grayscale-0 group-active:opacity-100 group-active:grayscale-0'
                 }
             `}
+            // Evitar que el onClick salte para items bloqueados si el usuario los presiona, aunque WarArmory valida internamente
             onClick={onClick}
         >
             <motion.div
@@ -62,8 +63,8 @@ function WeaponCard({ weapon, isUnlocked, isYoru, language, onClick, delay }: {
                 className="w-full h-full relative"
             >
                 {!isUnlocked && (
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px]">
-                        <span className="text-3xl mb-2">🔒</span>
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px] transition-all duration-300 md:group-hover:backdrop-blur-none md:group-hover:bg-transparent group-active:backdrop-blur-none group-active:bg-transparent pointer-events-none">
+                        <span className="text-3xl mb-2 transition-transform duration-300 md:group-hover:scale-110 group-active:scale-110">🔒</span>
                         <span className="text-[10px] uppercase font-bold tracking-widest">{TRANSLATIONS["armory.locked"][language]}</span>
                         <span className="text-[8px] opacity-60">{TRANSLATIONS["armory.control"][language]} {weapon.unlockAt}%</span>
                     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useGuilt } from "@/context/GuiltContext";
+import { TRANSLATIONS } from "@/constants/translations";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
@@ -11,19 +12,6 @@ import { useState, useEffect } from "react";
 // lo que Asa realmente piensa pero no se atreve a decir.
 // ============================================================
 
-const THOUGHTS = [
-    "Solo quiero que alguien se quede un rato...",
-    "¿Por qué siempre lo estropeo todo?",
-    "Ojalá pudiera ser una persona normal.",
-    "Me siento tan sola... incluso cuando ella está.",
-    "¿Alguien llegará a quererme de verdad?",
-    "No quiero que me miren... pero deseo que me vean.",
-    "Tengo miedo de lo que Yoru pueda hacer.",
-    "Lo siento... lo siento por todo.",
-    "¿Soy una mala persona por desear esto?",
-    "Ojalá pudiera volver atrás."
-];
-
 interface FloatingThought {
     id: number;
     text: string;
@@ -33,9 +21,11 @@ interface FloatingThought {
 }
 
 export default function InternalMonologue() {
-    const { activePersona } = useGuilt();
+    const { activePersona, language } = useGuilt();
     const isAsa = activePersona === "Asa";
     const [activeThoughts, setActiveThoughts] = useState<FloatingThought[]>([]);
+    const t = TRANSLATIONS;
+    const THOUGHTS = t["thoughts"][language];
 
     useEffect(() => {
         if (!isAsa) {

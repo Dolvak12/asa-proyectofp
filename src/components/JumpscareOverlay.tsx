@@ -22,7 +22,8 @@ export default function JumpscareOverlay() {
             // Reset automático si la culpa baja o cambia el estado
             setShow(false);
         }
-    }, [guilt, activePersona, playGlitch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [guilt, activePersona]); // Removing playGlitch to prevent re-render loop on context reference change
 
     return (
         <AnimatePresence>

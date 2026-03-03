@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useGuilt } from "@/context/GuiltContext";
+import { TRANSLATIONS } from "@/constants/translations";
 
 // ============================================================
 // YORU NOTIFICATIONS — FALSAS ALERTAS DE SISTEMA
@@ -10,18 +11,12 @@ import { useGuilt } from "@/context/GuiltContext";
 // Simulan avisos de iOS/Android pero con mensajes de Yoru.
 // ============================================================
 
-const YORU_ALERTS = [
-    "ASA, TENEMOS HAMBRE. DAME UN ARMA.",
-    "NO MIRES ATRÁS. YO ESTOY AHÍ.",
-    "¿POR QUÉ SIGUES INTENTANDO CONTROLARNOS?",
-    "LA CULPA ES EL MEJOR COMBUSTIBLE PARA MI ESPADA.",
-    "TU CUERPO SE SIENTE CADA VEZ MÁS... MÍO.",
-];
-
 export default function YoruNotifications() {
-    const { activePersona, guilt } = useGuilt();
+    const { activePersona, guilt, language } = useGuilt();
     const isYoru = activePersona === "Yoru";
     const [currentAlert, setCurrentAlert] = useState<string | null>(null);
+    const t = TRANSLATIONS;
+    const YORU_ALERTS = t["yoru_alerts"][language];
 
     useEffect(() => {
         if (!isYoru && guilt < 50) return;
@@ -70,9 +65,9 @@ export default function YoruNotifications() {
                             <div className="flex-1">
                                 <div className="flex justify-between items-center mb-1">
                                     <span className="text-[10px] font-bold uppercase tracking-widest opacity-50">
-                                        Sistema de Control
+                                        {language === "es" ? "Sistema de Control" : "Control System"}
                                     </span>
-                                    <span className="text-[10px] opacity-30 italic">ahora</span>
+                                    <span className="text-[10px] opacity-30 italic">{language === "es" ? "ahora" : "now"}</span>
                                 </div>
                                 <p className="text-sm font-medium leading-snug">
                                     {currentAlert}
