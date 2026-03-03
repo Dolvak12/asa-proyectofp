@@ -70,9 +70,9 @@ export default function YoruMascot() {
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 1, duration: 0.5, type: "spring" }}
-                        className="relative bg-white border-2 border-black rounded-3xl p-3 mb-4 shadow-[4px_4px_0px_#DC143C]"
+                        className="relative bg-white border-2 border-black rounded-2xl md:rounded-3xl p-2 md:p-3 mb-2 md:mb-4 shadow-[4px_4px_0px_#DC143C]"
                     >
-                        <p className="text-[#1B263B] font-bold text-xs max-w-[150px] leading-tight text-center" style={{ fontFamily: "var(--font-inter)" }}>
+                        <p className="text-[#1B263B] font-bold text-[10px] md:text-xs max-w-[120px] md:max-w-[150px] leading-none md:leading-tight text-center" style={{ fontFamily: "var(--font-inter)" }}>
                             ¡La queremos mi señora!
                             <br />
                             ¡Señora Yoru es la mejor!
@@ -84,7 +84,7 @@ export default function YoruMascot() {
                     </motion.div>
 
                     {/* El pececito mascot */}
-                    <div className="relative w-24 h-24">
+                    <div className="relative w-16 h-16 md:w-24 md:h-24">
                         <Image
                             src="/morenita.png" // User specified this name
                             alt="Yoru Mascot"
