@@ -82,6 +82,26 @@ export default function Header() {
                             </motion.span>
                         </AnimatePresence>
 
+                        {/* Botón de Códigos (Desktop/Mobile Header) */}
+                        <motion.button
+                            onClick={() => {
+                                // Buscamos si existe la función en el objeto window (o despachamos un evento personalizado)
+                                window.dispatchEvent(new CustomEvent('open-secret-modal'));
+                            }}
+                            className={`
+                  p-1.5 rounded-xl transition-all group
+                  ${isYoru
+                                    ? "bg-[#8B0000]/20 text-[#DC143C] border border-[#8B0000]/50 hover:bg-[#8B0000]/40"
+                                    : "bg-[#1B263B]/5 text-[#1B263B] border border-[#1B263B]/10 hover:bg-[#1B263B]/10"
+                                }
+                `}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            whileTap={{ scale: 0.9 }}
+                            title="Códigos Secretos"
+                        >
+                            <span className="text-sm md:text-base">🔑</span>
+                        </motion.button>
+
                         {/* Botón de reset — un momento de paz (solo visible cuando hay culpa) */}
                         {guilt > 0 && (
                             <motion.button

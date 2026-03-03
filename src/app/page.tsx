@@ -112,6 +112,13 @@ export default function Home() {
     return () => window.clearTimeout(bootTimer);
   }, []);
 
+  // Listen for global open-secret-modal event (from Header or elsewhere)
+  useEffect(() => {
+    const handleOpenModal = () => setShowSecretModal(true);
+    window.addEventListener('open-secret-modal', handleOpenModal);
+    return () => window.removeEventListener('open-secret-modal', handleOpenModal);
+  }, []);
+
   // HEARTBEAT EFFECT
   useEffect(() => {
     if (guilt < 20 || isYoru) return;
