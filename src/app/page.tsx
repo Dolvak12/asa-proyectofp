@@ -475,7 +475,7 @@ export default function Home() {
                 className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-[#DC143C] text-[10px] px-3 py-1.5 font-black uppercase tracking-[0.2em] border-2 border-[#DC143C] shadow-[4px_4px_0px_#DC143C]"
                 style={{ fontFamily: "var(--font-creepster)" }}
               >
-                {guilt === 100 && !isYoru && !isPactInProgress ? t["trigger.press_sign"][language] : isYoru ? "FIN DEL SANTUARIO" : t["header.nav.sanctuary_asa"][language]}
+                {guilt === 100 && !isYoru && !isPactInProgress ? t["trigger.press_sign"][language] : isYoru ? "FIN DEL SANTUARIO" : (language === "es" ? "SANTUARIO" : "SANCTUARY")}
               </motion.div>
             </motion.button>
           </motion.div>

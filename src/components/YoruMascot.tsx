@@ -25,26 +25,35 @@ export default function YoruMascot() {
             return;
         }
 
-        // Aparece mucho más seguido (cada 10-15s) en modo Yoru
-        const spawnMascot = () => {
+        let isMounted = true;
+
+        const loopMascot = () => {
+            if (!isMounted) return;
+
+            // Random chance to spawn
             if (Math.random() > 0.1) {
-                // Posición vertical aleatoria entre el 15% y el 85% de la pantalla
                 setSpawnTop(Math.floor(Math.random() * 70) + 15);
                 setIsVisible(true);
-                // Se queda más tiempo en pantalla (e.g. 15 segundos)
+
+                // Hide after 15 seconds
                 setTimeout(() => {
-                    setIsVisible(false);
+                    if (isMounted) {
+                        setIsVisible(false);
+                        // Wait 3 seconds before trying to spawn again
+                        setTimeout(loopMascot, 3000);
+                    }
                 }, 15000);
+            } else {
+                // If it decides not to spawn, try again in 5 seconds
+                setTimeout(loopMascot, 5000);
             }
         };
 
-        const interval = setInterval(spawnMascot, 12000);
-
-        // Spawn inicial rápido para que el usuario lo vea
-        const initialTimeout = setTimeout(spawnMascot, 2000);
+        // Initial spawn quickly after entering Yoru Mode
+        const initialTimeout = setTimeout(loopMascot, 2000);
 
         return () => {
-            clearInterval(interval);
+            isMounted = false;
             clearTimeout(initialTimeout);
         };
     }, [isYoru]);
