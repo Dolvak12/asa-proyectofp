@@ -12,61 +12,61 @@ import SeaFactBubble from "./SeaFactBubble";
 
 interface ImageSlide {
     src: string;
-    alt: string;
-    title: string;
-    lore: string;
-    detail: string;
-    revealText: string;
+    alt: { es: string; en: string };
+    title: { es: string; en: string };
+    lore: { es: string; en: string };
+    detail: { es: string; en: string };
+    revealText: { es: string; en: string };
 }
 
 const YORU_SLIDES: ImageSlide[] = [
     {
         src: "/images/yoru1.jpg",
-        alt: "Las cicatrices cruzadas del War Devil",
-        title: "LA MARCA DE LA GUERRA",
-        lore: "Las cicatrices cruzadas en su rostro son la firma del contrato demoníaco. Cada línea representa una guerra perdida, cada intersección un pacto sellado con sangre.",
-        detail: "War Devil • Demonio de la Guerra",
-        revealText: "REVELAR AL DEMONIO",
+        alt: { es: "Las cicatrices cruzadas del War Devil", en: "The cross scars of the War Devil" },
+        title: { es: "LA MARCA DE LA GUERRA", en: "THE MARK OF WAR" },
+        lore: { es: "Las cicatrices cruzadas en su rostro son la firma del contrato demoníaco. Cada línea representa una guerra perdida, cada intersección un pacto sellado con sangre.", en: "The cross scars on her face are the signature of the demonic pact. Every line represents a lost war, every intersection a pact sealed with blood." },
+        detail: { es: "War Devil • Demonio de la Guerra", en: "War Devil • The Devil of War" },
+        revealText: { es: "REVELAR AL DEMONIO", en: "REVEAL THE DEVIL" },
     },
     {
         src: "/images/yoru2.jpg",
-        alt: "El rostro de Yoru",
-        title: "EL ROSTRO DE LA GUERRA",
-        lore: "Detrás de las cicatrices está ella. Yoru. El Demonio de la Guerra que eligió a la chica más sola del mundo. Esa sonrisa no es de felicidad — es de hambre.",
-        detail: "「 Tu sufrimiento es mi fuerza. 」",
-        revealText: "FORMA DEFINITIVA",
+        alt: { es: "El rostro de Yoru", en: "Yoru's face" },
+        title: { es: "EL ROSTRO DE LA GUERRA", en: "THE FACE OF WAR" },
+        lore: { es: "Detrás de las cicatrices está ella. Yoru. El Demonio de la Guerra que eligió a la chica más sola del mundo. Esa sonrisa no es de felicidad — es de hambre.", en: "Behind the scars is her. Yoru. The War Devil that chose the loneliest girl in the world. That smile isn't happiness — it's hunger." },
+        detail: { es: "「 Tu sufrimiento es mi fuerza. 」", en: "「 Your suffering is my strength. 」" },
+        revealText: { es: "FORMA DEFINITIVA", en: "ULTIMATE FORM" },
     },
     {
         src: "/images/yoru3.jpg",
-        alt: "Yoru forma definitiva",
-        title: "IDENTIDAD COMPLETA",
-        lore: "Cuando la fusión es total, Asa deja de ser un huésped para convertirse en el arma definitiva. El Demonio de la Guerra posee su pasado y su potencial destructivo.",
-        detail: "Evolución Final • Posesión Absoluta",
-        revealText: "",
+        alt: { es: "Yoru forma definitiva", en: "Yoru's ultimate form" },
+        title: { es: "IDENTIDAD COMPLETA", en: "COMPLETE IDENTITY" },
+        lore: { es: "Cuando la fusión es total, Asa deja de ser un huésped para convertirse en el arma definitiva. El Demonio de la Guerra posee su pasado y su potencial destructivo.", en: "When fusion is complete, Asa stops being a host to become the ultimate weapon. The War Devil possesses her past and destructive potential." },
+        detail: { es: "Evolución Final • Posesión Absoluta", en: "Final Evolution • Absolute Possession" },
+        revealText: { es: "", en: "" },
     },
 ];
 
 const ASA_SLIDES: ImageSlide[] = [
     {
         src: "/images/asa1.jpg",
-        alt: "Asa Mitaka mirando por la ventana",
-        title: "La chica de la ventana",
-        lore: "Asa Mitaka pasa los recreos sola, no porque quiera, sino porque cada intento de hablar termina en un silencio incómodo que le dura horas en la cabeza.",
-        detail: "Asa Mitaka • Escuela Secundaria",
-        revealText: "Mirarla más de cerca...",
+        alt: { es: "Asa Mitaka mirando por la ventana", en: "Asa Mitaka looking out of the window" },
+        title: { es: "La chica de la ventana", en: "The girl at the window" },
+        lore: { es: "Asa Mitaka pasa los recreos sola, no porque quiera, sino porque cada intento de hablar termina en un silencio incómodo que le dura horas en la cabeza.", en: "Asa Mitaka spends recess alone, not because she wants to, but because every attempt to talk ends in an awkward silence that haunts her head for hours." },
+        detail: { es: "Asa Mitaka • Escuela Secundaria", en: "Asa Mitaka • High School" },
+        revealText: { es: "Mirarla más de cerca...", en: "Look closer..." },
     },
     {
         src: "/images/asa2.jpg",
-        alt: "Los ojos de Asa",
-        title: "Lo que nadie ve",
-        lore: "Si miras sus ojos el tiempo suficiente, puedes ver todo lo que esconde. El deseo de ser querida. La culpa por existir. Y algo más que la observa desde adentro.",
-        detail: "「 Solo quiero... que alguien me mire. 」",
-        revealText: "",
+        alt: { es: "Los ojos de Asa", en: "Asa's eyes" },
+        title: { es: "Lo que nadie ve", en: "What nobody sees" },
+        lore: { es: "Si miras sus ojos el tiempo suficiente, puedes ver todo lo que esconde. El deseo de ser querida. La culpa por existir. Y algo más que la observa desde adentro.", en: "If you look into her eyes long enough, you can see everything she hides. The desire to be loved. The guilt of existing. And something else watching from inside." },
+        detail: { es: "「 Solo quiero... que alguien me mire. 」", en: "「 I just want... someone to look at me. 」" },
+        revealText: { es: "", en: "" },
     },
 ];
 
 export default function CharacterPortrait() {
-    const { activePersona, guilt } = useGuiltState();
+    const { activePersona, guilt, language } = useGuiltState();
     const isYoru = activePersona === "Yoru";
     const slides = isYoru ? YORU_SLIDES : ASA_SLIDES;
 
@@ -161,7 +161,7 @@ export default function CharacterPortrait() {
                     >
                         <Image
                             src={currentData.src}
-                            alt={currentData.alt}
+                            alt={currentData.alt[language]}
                             fill
                             className="object-cover"
                             priority
@@ -172,10 +172,10 @@ export default function CharacterPortrait() {
                 {/* Info Overlay */}
                 <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black via-black/40 to-transparent text-white pt-20">
                     <h3 className={`text-2xl font-black uppercase mb-1 ${isYoru ? 'text-[#DC143C]' : ''}`} style={{ fontFamily: isYoru ? 'var(--font-creepster)' : 'inherit' }}>
-                        {currentData.title}
+                        {currentData.title[language]}
                     </h3>
-                    <p className="text-[10px] opacity-60 uppercase tracking-widest mb-3">{currentData.detail}</p>
-                    <p className="text-xs leading-relaxed opacity-80 italic">{currentData.lore}</p>
+                    <p className="text-[10px] opacity-60 uppercase tracking-widest mb-3">{currentData.detail[language]}</p>
+                    <p className="text-xs leading-relaxed opacity-80 italic">{currentData.lore[language]}</p>
                 </div>
 
                 {/* Navigation Buttons */}
@@ -187,7 +187,7 @@ export default function CharacterPortrait() {
                     )}
                     {hasNextSlide && (
                         <button onClick={handleReveal} className={`px-4 h-10 rounded-full font-black text-xs uppercase tracking-tighter shadow-xl hover:scale-105 transition-transform ${isYoru ? 'bg-[#DC143C]' : 'bg-black'} text-white`}>
-                            {currentData.revealText}
+                            {currentData.revealText[language]}
                         </button>
                     )}
                 </div>

@@ -5,11 +5,19 @@ import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { WEAPONS_DATA } from "@/constants/weapons";
+import { TRANSLATIONS } from "@/constants/translations";
 
 /**
  * WEAPON CARD COMPONENT WITH 3D TILT
  */
-function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
+function WeaponCard({ weapon, isUnlocked, isYoru, language, onClick, delay }: {
+    weapon: typeof WEAPONS_DATA[0];
+    isUnlocked: boolean;
+    isYoru: boolean;
+    language: "es" | "en";
+    onClick: () => void;
+    delay: number;
+}) {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const rotateX = useSpring(useTransform(y, [-100, 100], [10, -10]), { stiffness: 150, damping: 20 });
@@ -56,8 +64,8 @@ function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
                 {!isUnlocked && (
                     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/5 backdrop-blur-[2px]">
                         <span className="text-3xl mb-2">🔒</span>
-                        <span className="text-[10px] uppercase font-bold tracking-widest">Bloqueado</span>
-                        <span className="text-[8px] opacity-60">Control {weapon.unlockAt}%</span>
+                        <span className="text-[10px] uppercase font-bold tracking-widest">{TRANSLATIONS["armory.locked"][language]}</span>
+                        <span className="text-[8px] opacity-60">{TRANSLATIONS["armory.control"][language]} {weapon.unlockAt}%</span>
                     </div>
                 )}
 
@@ -65,7 +73,7 @@ function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
                     <>
                         <Image
                             src={`/assets/weapons/${weapon.image}`}
-                            alt={weapon.name}
+                            alt={weapon.name[language]}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                         />
@@ -77,10 +85,10 @@ function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
                             style={{ transform: "translateZ(30px)" }}
                         >
                             <h3 className={`text-lg font-bold text-white`}>
-                                {weapon.name}
+                                {weapon.name[language]}
                             </h3>
                             <p className="text-[10px] opacity-50 text-white uppercase tracking-tighter">
-                                Click para inspeccionar
+                                {TRANSLATIONS["armory.inspect"][language]}
                             </p>
                         </div>
                     </>
@@ -91,9 +99,10 @@ function WeaponCard({ weapon, isUnlocked, isYoru, onClick, delay }: any) {
 }
 
 export default function WarArmory() {
-    const { activePersona, weapons } = useGuiltState();
+    const { activePersona, weapons, language } = useGuiltState();
     const { playSlash } = useGuiltActions();
     const isYoru = activePersona === "Yoru";
+    const t = TRANSLATIONS;
     const [selectedWeapon, setSelectedWeapon] = useState<typeof WEAPONS_DATA[0] | null>(null);
 
     return (
@@ -106,10 +115,10 @@ export default function WarArmory() {
                 <h2 className={`text-2xl md:text-4xl font-black uppercase tracking-[0.2em] mb-4 ${isYoru ? 'text-[#DC143C]' : 'text-[#1B263B]'}`}
                     style={{ fontFamily: isYoru ? 'var(--font-creepster)' : 'var(--font-inter)' }}
                 >
-                    {isYoru ? "Armería del Demonio de la Guerra" : "Coleccionables Obscuros"}
+                    {isYoru ? t["armory.title"][language] : t["armory.asa_title"][language]}
                 </h2>
                 <p className="text-xs md:text-sm opacity-40 uppercase tracking-widest">
-                    Las armas se forjan con el dolor del alma
+                    {t["armory.subtitle"][language]}
                 </p>
             </motion.div>
 
@@ -120,6 +129,7 @@ export default function WarArmory() {
                         weapon={weapon}
                         isUnlocked={weapons.includes(weapon.id)}
                         isYoru={isYoru}
+                        language={language}
                         onClick={() => {
                             if (weapons.includes(weapon.id)) {
                                 playSlash();
@@ -166,7 +176,7 @@ export default function WarArmory() {
                             <div className="relative w-full md:w-1/2 aspect-square md:aspect-auto">
                                 <Image
                                     src={`/assets/weapons/${selectedWeapon.image}`}
-                                    alt={selectedWeapon.name}
+                                    alt={selectedWeapon.name[language]}
                                     fill
                                     className="object-cover"
                                 />
@@ -176,15 +186,15 @@ export default function WarArmory() {
                             {/* Info Part */}
                             <div className="p-8 md:p-12 flex-1 flex flex-col justify-center">
                                 <span className={`text-[10px] uppercase font-bold tracking-[0.4em] mb-2 ${isYoru ? 'text-red-500' : 'text-blue-500'}`}>
-                                    Arma del Demonio
+                                    {t["armory.devil_weapon"][language]}
                                 </span>
                                 <h1 className={`text-3xl md:text-5xl font-black mb-6 ${isYoru ? 'text-white' : 'text-black'}`}
                                     style={{ fontFamily: isYoru ? 'var(--font-creepster)' : 'var(--font-inter)' }}
                                 >
-                                    {selectedWeapon.name}
+                                    {selectedWeapon.name[language]}
                                 </h1>
                                 <p className={`text-sm md:text-lg leading-relaxed mb-8 ${isYoru ? 'text-white/60' : 'text-black/60'}`}>
-                                    {selectedWeapon.description}
+                                    {selectedWeapon.description[language]}
                                 </p>
 
                                 <div className={`pt-8 border-t ${isYoru ? 'border-red-900/30' : 'border-black/10'}`}>
@@ -193,7 +203,7 @@ export default function WarArmory() {
                                             {isYoru ? "⚔" : "✦"}
                                         </div>
                                         <div>
-                                            <p className={`text-[10px] font-bold uppercase ${isYoru ? 'text-red-400' : 'text-black/40'}`}>Propiedad de:</p>
+                                            <p className={`text-[10px] font-bold uppercase ${isYoru ? 'text-red-400' : 'text-black/40'}`}>{t["armory.owned_by"][language]}</p>
                                             <p className={`text-sm font-bold ${isYoru ? 'text-red-500' : 'text-black'}`}>{isYoru ? 'YORU' : 'ASA MITAKA'}</p>
                                         </div>
                                     </div>

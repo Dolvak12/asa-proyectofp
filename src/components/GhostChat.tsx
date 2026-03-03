@@ -4,25 +4,7 @@ import { useGuilt } from "@/context/GuiltContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
-const GHOST_MESSAGES_ASA = [
-    "¿Ella puede vernos?",
-    "No te sientas mal por ella...",
-    "Solo es una chica normal.",
-    "¿Por qué está tan sola?",
-    "Dile que todo estará bien.",
-    "No hagas clic más.",
-    "El acuario estaba vacío."
-];
-
-const GHOST_MESSAGES_YORU = [
-    "DAME MÁS CONTROL.",
-    "FIRMALA.",
-    "ELLA NO TE NECESITA.",
-    "CONVIÉRTELO EN ARMA.",
-    "TENGO HAMBRE.",
-    "ME PERTENECE.",
-    "MÁS GUERRA."
-];
+import { TRANSLATIONS } from "@/constants/translations";
 
 /**
  * GHOST CHAT — Resonancia Psicológica
@@ -31,8 +13,9 @@ const GHOST_MESSAGES_YORU = [
  * Aumentan en frecuencia con el nivel de culpa.
  */
 export default function GhostChat() {
-    const { guilt, activePersona } = useGuilt();
+    const { guilt, activePersona, language } = useGuilt();
     const isYoru = activePersona === "Yoru";
+    const t = TRANSLATIONS;
     const [messages, setMessages] = useState<{ id: number; text: string; x: string; y: string }[]>([]);
 
     useEffect(() => {
@@ -40,7 +23,7 @@ export default function GhostChat() {
 
         const spawnRate = isYoru ? 1500 : 5000 - (guilt * 30);
         const interval = setInterval(() => {
-            const pool = isYoru ? GHOST_MESSAGES_YORU : GHOST_MESSAGES_ASA;
+            const pool = isYoru ? t["ghost.yoru"][language] : t["ghost.asa"][language];
             const newMessage = {
                 id: Date.now(),
                 text: pool[Math.floor(Math.random() * pool.length)],

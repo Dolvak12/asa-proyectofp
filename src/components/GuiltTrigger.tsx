@@ -3,6 +3,7 @@
 import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, useAnimationControls, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useCallback } from "react";
+import { TRANSLATIONS } from "@/constants/translations";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 
@@ -30,10 +31,11 @@ const YORU_QUOTES = [
 ];
 
 export default function GuiltTrigger() {
-    const { guilt, activePersona, justTriggered, combo } = useGuiltState();
+    const { guilt, activePersona, justTriggered, combo, language } = useGuiltState();
     const { addGuilt, clearTrigger, signContract, incCombo, resetCombo, startTransition, playSlash } = useGuiltActions();
     const controls = useAnimationControls();
     const isYoru = activePersona === "Yoru";
+    const t = TRANSLATIONS;
 
     const [quoteIndex, setQuoteIndex] = useState(0);
     const [bangs, setBangs] = useState<{ id: number; x: number; y: number; size: number; rotate: number }[]>([]);
@@ -160,7 +162,7 @@ export default function GuiltTrigger() {
                 <div className="mb-10 opacity-40 flex items-center gap-3">
                     <span className="text-xl">{isYoru ? "⚔" : "🐚"}</span>
                     <span className="text-[10px] uppercase font-black tracking-[0.5em]">
-                        {isYoru ? "POSESIÓN DEMONÍACA" : "MONÓLOGO INTERIOR"}
+                        {isYoru ? t["trigger.posession"][language] : t["trigger.monologue"][language]}
                     </span>
                 </div>
 
@@ -181,7 +183,7 @@ export default function GuiltTrigger() {
                             className="w-full py-4 md:py-6 text-xl md:text-2xl font-black bg-black text-white border-4 border-[#DC143C] shadow-[10px_10px_0px_#DC143C] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
                             whileHover={{ scale: 1.02 }}
                         >
-                            ENTREGAR MI CUERPO
+                            {t["trigger.surrender"][language]}
                         </motion.button>
                     ) : (
                         <motion.button
@@ -196,7 +198,7 @@ export default function GuiltTrigger() {
                             `}
                             whileTap={{ scale: 1.2 }}
                         >
-                            {isYoru ? "DISPARA" : "HUNDIRSE EN CULPA"}
+                            {isYoru ? t["trigger.shoot"][language] : t["trigger.sink"][language]}
                         </motion.button>
                     )}
 
@@ -208,7 +210,7 @@ export default function GuiltTrigger() {
                             />
                         </div>
                         <p className={`text-[10px] font-bold uppercase tracking-widest ${isYoru ? 'text-[#DC143C]' : 'opacity-40'}`}>
-                            {isYoru ? "CONTROL TOTAL DEL DEMONIO" : `Nivel de trauma: ${guilt}%`}
+                            {isYoru ? t["trigger.total_control"][language] : `${t["trigger.trauma"][language]}: ${guilt}%`}
                         </p>
                     </div>
                 </div>
@@ -229,7 +231,7 @@ export default function GuiltTrigger() {
                             className="text-white text-5xl md:text-9xl font-black mb-12 opacity-80 text-center"
                             style={{ fontFamily: "var(--font-creepster)" }}
                         >
-                            PACTO DE GUERRA
+                            {t["trigger.pact"][language]}
                         </motion.div>
 
                         <div className="w-full max-w-xl bg-white/10 h-4 rounded-full overflow-hidden mb-4">
@@ -239,7 +241,7 @@ export default function GuiltTrigger() {
                             />
                         </div>
                         <p className="text-[#DC143C] font-mono text-xs uppercase tracking-[1em] animate-pulse">
-                            SELLANDO CONTRATO...
+                            {t["trigger.sealing"][language]}
                         </p>
 
                         {/* Blood splatters */}

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { WEAPONS_DATA } from "@/constants/weapons";
 import MangaHaptics from "./MangaHaptics";
 import TextDecrypter from "./TextDecrypter";
+import { TRANSLATIONS } from "@/constants/translations";
 
 /**
  * SECRET LORE BOOK — Diario de Asa y Armería de Yoru
@@ -16,8 +17,9 @@ import TextDecrypter from "./TextDecrypter";
  * - Modo Yoru: Armería (Placeholders de armas).
  */
 export default function SecretLoreBook() {
-    const { guilt, activePersona, weapons } = useGuilt();
+    const { guilt, activePersona, weapons, language } = useGuilt();
     const isYoru = activePersona === "Yoru";
+    const t = TRANSLATIONS;
     const [isDiaryOpen, setIsDiaryOpen] = useState(false);
     const [isArmoryOpen, setIsArmoryOpen] = useState(false);
 
@@ -40,7 +42,7 @@ export default function SecretLoreBook() {
                                 className="bg-white/90 border-2 border-[#1B263B] p-3 shadow-[4px_4px_0px_#1B263B] group hover:bg-[#1B263B] transition-colors"
                             >
                                 <span className="text-[#1B263B] group-hover:text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2">
-                                    📖 Leer Diario
+                                    📖 {t["nav.diary"][language]}
                                 </span>
                             </motion.button>
                         )}
@@ -57,7 +59,7 @@ export default function SecretLoreBook() {
                                 className="bg-black border-2 border-[#DC143C] p-3 shadow-[4px_4px_0px_#DC143C] group hover:bg-[#DC143C] transition-colors"
                             >
                                 <span className="text-[#DC143C] group-hover:text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2">
-                                    ⚔️ Armería de Guerra
+                                    ⚔️ {t["nav.armory"][language]}
                                 </span>
                             </motion.button>
                         )}
@@ -91,16 +93,16 @@ export default function SecretLoreBook() {
                             >
                                 ✕
                             </button>
-                            <h2 className="text-2xl font-black uppercase mb-6 border-b-2 border-black pb-2">Diario de Asa Mitaka</h2>
+                            <h2 className="text-2xl font-black uppercase mb-6 border-b-2 border-black pb-2">{t["diary.title"][language]}</h2>
 
                             <div className="space-y-6 text-[#1B263B] italic font-medium leading-relaxed">
                                 <p className="relative group">
-                                    "Ojalá supiera cómo ser normal. Todo el mundo ríe y habla... yo solo sé datos sobre anémonas. <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">Me pregunto si alguien me querrá así.</span>"
+                                    "{t["diary.p1_1"][language]} <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">{t["diary.p1_2"][language]}</span>"
                                 </p>
                                 <p className="relative group">
-                                    "A veces siento una voz... una voz que me dice que puedo tenerlo todo si dejo de ser débil. <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">Sé que es ella. Sé que es Guerra.</span>"
+                                    "{t["diary.p2_1"][language]} <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">{t["diary.p2_2"][language]}</span>"
                                 </p>
-                                <p className="text-xs opacity-40 uppercase tracking-tighter mt-4">(Pasa el cursor por las zonas borrosas para leer la verdad)</p>
+                                <p className="text-xs opacity-40 uppercase tracking-tighter mt-4">{t["diary.hint"][language]}</p>
                             </div>
                         </motion.div>
                     </motion.div>
@@ -138,7 +140,7 @@ export default function SecretLoreBook() {
                             >
                                 ✕
                             </button>
-                            <h2 className="text-3xl font-black uppercase mb-6 text-[#DC143C]" style={{ fontFamily: "var(--font-creepster)" }}>Armería del Demonio de la Guerra</h2>
+                            <h2 className="text-3xl font-black uppercase mb-6 text-[#DC143C]" style={{ fontFamily: "var(--font-creepster)" }}>{t["armory.title"][language]}</h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {WEAPONS_DATA.map((weapon, idx) => {
@@ -157,7 +159,7 @@ export default function SecretLoreBook() {
                                                     <>
                                                         <Image
                                                             src={`/assets/weapons/${weapon.image}`}
-                                                            alt={weapon.name}
+                                                            alt={weapon.name[language]}
                                                             fill
                                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                                         />
@@ -168,7 +170,7 @@ export default function SecretLoreBook() {
                                                         />
                                                     </>
                                                 ) : (
-                                                    <span className="text-[#DC143C]/10 text-xl font-black">BLOQUEADO</span>
+                                                    <span className="text-[#DC143C]/10 text-xl font-black">{t["armory.locked"][language]}</span>
                                                 )}
 
                                                 {/* Onomatopoeia on Hover */}
@@ -177,17 +179,17 @@ export default function SecretLoreBook() {
                                                 </div>
                                             </div>
                                             <h3 className="font-black text-[#DC143C] uppercase mb-1 flex justify-between items-center">
-                                                {weapon.name}
+                                                {weapon.name[language]}
                                                 {!isUnlocked && <span className="text-[8px] opacity-40">Lvl {weapon.unlockAt}%</span>}
                                             </h3>
                                             <p className="text-[10px] text-white/50 leading-tight">
-                                                {isUnlocked ? <TextDecrypter text={weapon.description} /> : "Contenido secreto oculto tras la culpa."}
+                                                {isUnlocked ? <TextDecrypter text={weapon.description[language]} /> : t["armory.hidden_desc"][language]}
                                             </p>
                                         </motion.div>
                                     );
                                 })}
                             </div>
-                            <p className="text-[10px] text-[#DC143C]/40 uppercase mt-6 tracking-[0.3em]"><TextDecrypter text="Todo lo que me pertenece se convierte en mi arma." /></p>
+                            <p className="text-[10px] text-[#DC143C]/40 uppercase mt-6 tracking-[0.3em]"><TextDecrypter text={t["armory.footer"][language]} /></p>
                         </motion.div>
                     </motion.div>
                 )}

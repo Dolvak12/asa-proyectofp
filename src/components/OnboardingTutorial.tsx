@@ -26,7 +26,7 @@ const CONTENT = {
 };
 
 export default function OnboardingTutorial() {
-    const { initAudio, addGuilt, signContract } = useGuiltActions();
+    const { initAudio, addGuilt, signContract, setGlobalLanguage } = useGuiltActions();
 
     const [isMounted, setIsMounted] = useState(false);
     const [isAccepted, setIsAccepted] = useState(false);
@@ -63,7 +63,7 @@ export default function OnboardingTutorial() {
 
     const handleSelectLanguage = (lang: "es" | "en") => {
         setLanguage(lang);
-        localStorage.setItem("glt_lang", lang);
+        setGlobalLanguage(lang);
         setStep(1);
     };
 

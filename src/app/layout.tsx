@@ -30,6 +30,7 @@ const creepster = Creepster({
 // METADATA — SEO para el Santuario
 // ============================================================
 export const metadata: Metadata = {
+  metadataBase: new URL("https://guilty-sanctuary.netlify.app"),
   title: "Guilty Sanctuary — Asa Mitaka × Yoru Fan Experience",
   description:
     "Experimenta la dualidad de Asa Mitaka y el Demonio de la Guerra Yoru. " +

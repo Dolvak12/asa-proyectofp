@@ -41,7 +41,7 @@ export default function TextDecrypter({ text, speed = 30, className = "" }: Prop
         }
     }, [isYoru, text, hasDecrypted]);
 
-    const handleMouseEnter = () => {
+    const startDecryption = () => {
         if (!isYoru || isDecrypting || hasDecrypted) return;
 
         setIsDecrypting(true);
@@ -73,15 +73,26 @@ export default function TextDecrypter({ text, speed = 30, className = "" }: Prop
         }, speed);
     };
 
-    // Cleanup
+    // Cleanup and auto-decrypt after 3 seconds for accessibility
     useEffect(() => {
-        return () => clearInterval(intervalRef.current!);
-    }, []);
+        const autoTimer = setTimeout(() => {
+            if (isYoru && !hasDecrypted && !isDecrypting) {
+                startDecryption();
+            }
+        }, 3000);
+
+        return () => {
+            clearInterval(intervalRef.current!);
+            clearTimeout(autoTimer);
+        };
+    }, [isYoru, hasDecrypted, isDecrypting]);
 
     return (
         <span
             className={`${className} ${isDecrypting ? "animate-pulse text-[#DC143C]" : ""} origin-center transition-colors duration-100 cursor-crosshair`}
-            onMouseEnter={handleMouseEnter}
+            onMouseEnter={startDecryption}
+            onClick={startDecryption}
+            onTouchStart={startDecryption}
             style={{ textShadow: isDecrypting ? "2px 2px 0px #0ff, -2px -2px 0px #f00" : "none" }}
         >
             {displayText}

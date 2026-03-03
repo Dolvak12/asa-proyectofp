@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from "react";
 import { WEAPONS_DATA } from "@/constants/weapons";
 import { useAudio } from "@/hooks/useAudio";
+import { Language } from "@/constants/translations";
 
 // ============================================================
 // GUILT CONTEXT — EL MOTOR DEL DUAL-STATE ENGINE
@@ -27,6 +28,7 @@ interface GuiltState {
     weapons: string[];
     combo: number;
     isTransitioning: boolean;
+    language: Language;
 }
 
 interface GuiltActions {
@@ -38,6 +40,7 @@ interface GuiltActions {
     incCombo: () => void;
     resetCombo: () => void;
     startTransition: (callback: () => void) => void;
+    setGlobalLanguage: (lang: Language) => void;
 
     // Audio Actions
     initAudio: () => void;
@@ -56,8 +59,16 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
     const [weapons, setWeapons] = useState<string[]>([]);
     const [combo, setCombo] = useState<number>(0);
     const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+    const [language, setLanguage] = useState<Language>("es");
 
     const { initAudio, playHeartbeat, playSlash, playGlitch } = useAudio();
+
+    useEffect(() => {
+        const savedLang = localStorage.getItem("glt_lang");
+        if (savedLang === "en" || savedLang === "es") {
+            setLanguage(savedLang);
+        }
+    }, []);
 
     // Auto-unlock weapons globally
     useEffect(() => {
@@ -81,6 +92,11 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
         setTimeout(() => {
             setIsTransitioning(false);
         }, 800);
+    }, []);
+
+    const setGlobalLanguage = useCallback((lang: Language) => {
+        setLanguage(lang);
+        localStorage.setItem("glt_lang", lang);
     }, []);
 
     const addGuilt = useCallback((amount: number) => {
@@ -121,7 +137,8 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
         weapons,
         combo,
         isTransitioning,
-    }), [guilt, isContractSigned, activePersona, justTriggered, weapons, combo, isTransitioning]);
+        language,
+    }), [guilt, isContractSigned, activePersona, justTriggered, weapons, combo, isTransitioning, language]);
 
     const actionsValue = useMemo(() => ({
         addGuilt,
@@ -136,7 +153,8 @@ export function GuiltProvider({ children }: { children: React.ReactNode }) {
         playHeartbeat,
         playSlash,
         playGlitch,
-    }), [addGuilt, resetGuilt, signContract, clearTrigger, unlockWeapon, incCombo, resetCombo, startTransition, initAudio, playHeartbeat, playSlash, playGlitch]);
+        setGlobalLanguage,
+    }), [addGuilt, resetGuilt, signContract, clearTrigger, unlockWeapon, incCombo, resetCombo, startTransition, initAudio, playHeartbeat, playSlash, playGlitch, setGlobalLanguage]);
 
     return (
         <GuiltStateContext.Provider value={stateValue}>

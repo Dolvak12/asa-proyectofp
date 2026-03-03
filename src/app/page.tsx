@@ -22,14 +22,16 @@ import TextDecrypter from "@/components/TextDecrypter";
 import EasterEggListener from "@/components/EasterEggListener";
 import AtmosphericDust from "@/components/AtmosphericDust";
 import JumpscareOverlay from "@/components/JumpscareOverlay";
-import { useGuilt, useGuiltState, useGuiltActions } from "@/context/GuiltContext";
-import { motion, AnimatePresence, useScroll, useSpring, useMotionValue, useTransform } from "framer-motion";
+import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
+import { TRANSLATIONS } from "@/constants/translations";
+import { motion, AnimatePresence, useScroll, useSpring, useMotionValue } from "framer-motion";
 import { useEffect, useState, useCallback } from "react";
 
 export default function Home() {
-  const { guilt, isContractSigned, activePersona, combo } = useGuiltState();
-  const { addGuilt, resetGuilt, signContract, initAudio, playHeartbeat } = useGuiltActions();
+  const { guilt, isContractSigned, activePersona, combo, language } = useGuiltState();
+  const { resetGuilt, signContract, initAudio, playHeartbeat } = useGuiltActions();
   const isYoru = activePersona === "Yoru";
+  const t = TRANSLATIONS;
   const [isBooting, setIsBooting] = useState(true);
 
   const [isPactInProgress, setIsPactInProgress] = useState(false);
@@ -152,7 +154,7 @@ export default function Home() {
                 animate={{ opacity: [0.35, 1, 0.35] }}
                 transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
               >
-                Inicializando Santuario
+                {t["page.init"][language]}
               </motion.span>
 
               <motion.div
@@ -167,7 +169,7 @@ export default function Home() {
               </motion.div>
 
               <p className={`text-xs md:text-sm max-w-md ${isYoru ? "text-[#F5F5F0]/55" : "text-[#1B263B]/55"}`}>
-                Cargando recuerdos, culpa y ecos de guerra...
+                {t["page.loading"][language]}
               </p>
             </div>
           </motion.div>
@@ -230,7 +232,7 @@ export default function Home() {
                 fontFamily: isYoru ? "var(--font-creepster)" : "var(--font-inter)",
               }}
             >
-              {isYoru ? <TextDecrypter text="EL DEMONIO HA DESPERTADO" /> : "Chainsaw Man Part 2 — Academy Saga"}
+              {isYoru ? <TextDecrypter text={t["page.subtitle_yoru"][language]} /> : "Chainsaw Man Part 2 — Academy Saga"}
             </motion.p>
           </CorruptionLayer>
 
@@ -261,8 +263,8 @@ export default function Home() {
               `}
             >
               {isYoru
-                ? <TextDecrypter text="Este santuario me pertenece ahora. Tu culpa me ha dado el poder. No hay vuelta atrás." />
-                : "Dos mentes. Un cuerpo. Un santuario donde la culpa de Asa alimenta el poder de Yoru."
+                ? <TextDecrypter text={t["page.desc_yoru"][language]} />
+                : t["page.desc_asa"][language]
               }
             </motion.p>
           </CorruptionLayer>
@@ -274,7 +276,7 @@ export default function Home() {
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 2 }}
             >
-              <span>MIRA ABAJO</span>
+              <span>{t["page.look_down"][language]}</span>
               <span className="text-xl">↓</span>
             </motion.div>
           )}
@@ -296,7 +298,7 @@ export default function Home() {
               animate={{ y: [0, 8, 0] }}
               transition={{ repeat: Infinity, duration: 2.5 }}
             >
-              <span className="text-[10px] tracking-widest uppercase mb-1">Sentir</span>
+              <span className="text-[10px] tracking-widest uppercase mb-1">{t["page.feel"][language]}</span>
               <span>↓</span>
             </motion.div>
           )}
@@ -369,13 +371,11 @@ export default function Home() {
             `}
           >
             <p className="text-xs leading-relaxed max-w-lg mx-auto">
-              Guilty Sanctuary es una fanpage sin fines de lucro creada por fans para fans.
-              Chainsaw Man y todos los personajes relacionados son propiedad de Tatsuki Fujimoto
-              y Shueisha.
+              {t["page.footer_disclaimer"][language]}
             </p>
           </div>
           <p className="text-[10px] opacity-60">
-            © {new Date().getFullYear()} Guilty Sanctuary • Hecho con culpa y código
+            © {new Date().getFullYear()} Guilty Sanctuary • {t["page.footer_made"][language]}
           </p>
         </motion.footer>
       </div>
@@ -402,6 +402,32 @@ export default function Home() {
             onTouchEnd={handleMouseLeave}
             className="relative"
           >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#0A0A0A] border-4 border-[#DC143C] p-6 max-w-sm w-full shadow-[10px_10px_0px_#8B0000] relative"
+            >
+              <h3 className="text-[#DC143C] text-2xl font-black uppercase mb-4" style={{ fontFamily: "var(--font-creepster)" }}>
+                {t["page.codes_title"][language]}
+              </h3>
+              <form onSubmit={handleSecretSubmit}>
+                <input
+                  type="text"
+                  value={secretInput}
+                  onChange={(e) => setSecretInput(e.target.value)}
+                  placeholder="YORU, ASA, POCHITA..."
+                  className="w-full bg-black border-2 border-[#DC143C]/50 text-white p-3 font-mono uppercase focus:outline-none focus:border-[#DC143C] mb-4"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-[#DC143C] text-white font-black p-3 hover:bg-[#8B0000] transition-colors"
+                >
+                  {t["page.codes_execute"][language]}
+                </button>
+              </form>
+            </motion.div>
             <motion.button
               onClick={handleCentralAction}
               whileTap={{ scale: 0.85, y: 8 }}
@@ -460,7 +486,7 @@ export default function Home() {
                 className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-[#DC143C] text-[10px] px-3 py-1.5 font-black uppercase tracking-[0.2em] border-2 border-[#DC143C] shadow-[4px_4px_0px_#DC143C]"
                 style={{ fontFamily: "var(--font-creepster)" }}
               >
-                {guilt === 100 && !isYoru && !isPactInProgress ? "PULSA PARA FIRMAR" : "CÓDIGOS"}
+                {guilt === 100 && !isYoru && !isPactInProgress ? t["trigger.press_sign"][language] : t["page.codes_btn"][language]}
               </motion.div>
             </motion.button>
           </motion.div>
