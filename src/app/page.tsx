@@ -30,7 +30,7 @@ import { useEffect, useState, useCallback } from "react";
 
 export default function Home() {
   const { guilt, isContractSigned, activePersona, combo, language } = useGuiltState();
-  const { resetGuilt, signContract, initAudio, playHeartbeat, addGuilt, incCombo } = useGuiltActions();
+  const { resetGuilt, signContract, initAudio, playHeartbeat, addGuilt, incCombo, playSlash, playGlitch } = useGuiltActions();
   const isYoru = activePersona === "Yoru";
   const t = TRANSLATIONS;
   const [isBooting, setIsBooting] = useState(true);
@@ -83,14 +83,31 @@ export default function Home() {
 
   const handleSecretSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const code = secretInput.toUpperCase();
+    const code = secretInput.toUpperCase().trim();
 
-    // Dispatch a fake keyboard event string so EasterEggListener picks it up
-    // Since EasterEggListener listens to window keydown, we can just simulate it
-    // Or simpler: dispatch individual keydown events for each character
-    code.split('').forEach(char => {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: char }));
-    });
+    if (code === "YORU") {
+      playGlitch(); // Use glitch for Yoru
+      addGuilt(100);
+    } else if (code === "ASA") {
+      resetGuilt();
+    } else if (code === "POCHITA") {
+      playSlash();
+      playSlash();
+      // We can't easily trigger the camera shake from here without more refactoring, 
+      // but the keyboard event fallback still exists for simplicity if we want
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'P' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'O' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'C' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'H' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'I' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'T' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'A' }));
+    } else {
+      // Fallback for other codes like MAKIMA or custom ones in EasterEggListener
+      code.split('').forEach(char => {
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: char }));
+      });
+    }
 
     setShowSecretModal(false);
     setSecretInput("");
@@ -204,6 +221,66 @@ export default function Home() {
       <JuiceOverlay />
       <MangaHaptics />
       <YoruControl />
+
+      {/* Secret Codes Modal (Global) */}
+      <AnimatePresence>
+        {showSecretModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[20000] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className={`
+                w-full max-w-sm relative p-8
+                ${isYoru ? "bg-[#0A0A0A] border-4 border-[#DC143C] shadow-[10px_10px_0px_#8B0000]" : "bg-white border-4 border-[#1B263B] shadow-[10px_10px_0px_#1B263B]"}
+              `}
+            >
+              <button
+                onClick={() => setShowSecretModal(false)}
+                className={`absolute -top-12 -right-4 text-2xl font-black ${isYoru ? "text-[#DC143C]" : "text-white"}`}
+              >
+                ✕
+              </button>
+
+              <h3
+                className={`text-2xl font-black uppercase mb-6 tracking-tighter ${isYoru ? "text-[#DC143C]" : "text-[#1B263B]"}`}
+                style={{ fontFamily: isYoru ? "var(--font-creepster)" : "var(--font-inter)" }}
+              >
+                {isYoru ? "INTRODUCE EL CÓDIGO" : "CÓDIGOS SECRETOS"}
+              </h3>
+
+              <form onSubmit={handleSecretSubmit}>
+                <input
+                  autoFocus
+                  placeholder="YORU, ASA, POCHITA..."
+                  value={secretInput}
+                  onChange={(e) => setSecretInput(e.target.value)}
+                  className={`
+                    w-full p-4 mb-4 font-mono uppercase text-sm
+                    bg-transparent border-2 outline-none transition-colors
+                    ${isYoru ? "border-[#DC143C]/30 text-white focus:border-[#DC143C]" : "border-[#1B263B]/20 text-[#1B263B] focus:border-[#1B263B]"}
+                  `}
+                  type="text"
+                />
+                <button
+                  type="submit"
+                  className={`
+                    w-full p-4 font-black uppercase tracking-[0.2em] transition-all
+                    ${isYoru ? "bg-[#DC143C] text-white hover:bg-[#8B0000]" : "bg-[#1B263B] text-white hover:bg-[#2D4A7A]"}
+                  `}
+                >
+                  EJECUTAR
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Global Glitch Overlay (High Combo) */}
       <AnimatePresence>
