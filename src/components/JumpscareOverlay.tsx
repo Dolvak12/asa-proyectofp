@@ -11,20 +11,18 @@ export default function JumpscareOverlay() {
 
     useEffect(() => {
         // Disparar exactamente cuando la culpa llega a 100 siendo Asa
-        if (guilt === 100 && activePersona === "Asa" && !show) {
+        if (guilt === 100 && activePersona === "Asa") {
             setShow(true);
             playGlitch(); // Ruido estridente
 
             // Jumpscare dura exactamente 1 segundo
             const timer = setTimeout(() => setShow(false), 1000);
             return () => clearTimeout(timer);
-        }
-
-        // Reset si la culpa baja (por Konami code o refresh)
-        if (guilt < 100 && show) {
+        } else {
+            // Reset automático si la culpa baja o cambia el estado
             setShow(false);
         }
-    }, [guilt, activePersona, playGlitch, show]);
+    }, [guilt, activePersona, playGlitch]);
 
     return (
         <AnimatePresence>
