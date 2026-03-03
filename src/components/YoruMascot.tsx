@@ -24,21 +24,21 @@ export default function YoruMascot() {
             return;
         }
 
-        // Aparece aleatoriamente en modo Yoru cada 15-30 segundos
+        // Aparece mucho más seguido (cada 10-15s) en modo Yoru
         const spawnMascot = () => {
-            if (Math.random() > 0.3) {
+            if (Math.random() > 0.1) {
                 setIsVisible(true);
-                // Desaparece después de navegar la pantalla (e.g. 8 segundos)
+                // Se queda más tiempo en pantalla (e.g. 15 segundos)
                 setTimeout(() => {
                     setIsVisible(false);
-                }, 8000);
+                }, 15000);
             }
         };
 
-        const interval = setInterval(spawnMascot, 20000);
+        const interval = setInterval(spawnMascot, 12000);
 
         // Spawn inicial rápido para que el usuario lo vea
-        const initialTimeout = setTimeout(spawnMascot, 3000);
+        const initialTimeout = setTimeout(spawnMascot, 2000);
 
         return () => {
             clearInterval(interval);
@@ -58,9 +58,9 @@ export default function YoruMascot() {
                     }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{
-                        x: { duration: 10, ease: "linear" },
-                        y: { duration: 10, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
-                        rotate: { duration: 4, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
+                        x: { duration: 15, ease: "linear" },
+                        y: { duration: 12, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
+                        rotate: { duration: 6, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
                         opacity: { duration: 1 }
                     }}
                     className="fixed z-[9000] pointer-events-none flex flex-col items-center top-[55%] md:top-[60%] -translate-y-1/2"

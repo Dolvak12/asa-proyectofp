@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:<>?/=~";
+const YORU_CHARS = "GUERRAMUERTESANGRECULPAARMAODIODOLORMITALOSATOODOS";
+const YORU_WORDS_ES = ["GUERRA", "MUERTE", "SANGRE", "CULPA", "ARMA", "MATAR", "DOLOR", "ODIO", "MIO"];
+const YORU_WORDS_EN = ["WAR", "DEATH", "BLOOD", "GUILT", "WEAPON", "KILL", "PAIN", "HATE", "MINE"];
 
 interface Props {
     text: string;
@@ -13,11 +15,11 @@ interface Props {
 
 /**
  * TextDecrypter — Cifrado Cibernético
- * Muestra símbolos aleatorios que se descifran a texto legible cuando el usuario
+ * Muestra palabras asombrosas de Yoru que se descifran a texto legible cuando el usuario
  * interactúa (hover). Solo se activa bajo la influencia de Yoru.
  */
 export default function TextDecrypter({ text, speed = 30, className = "" }: Props) {
-    const { activePersona } = useGuiltState();
+    const { activePersona, language } = useGuiltState();
     const { playGlitch } = useGuiltActions();
     const isYoru = activePersona === "Yoru";
 
@@ -27,19 +29,24 @@ export default function TextDecrypter({ text, speed = 30, className = "" }: Prop
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    const getScaryPhrase = () => {
+        const words = language === "en" ? YORU_WORDS_EN : YORU_WORDS_ES;
+        let phrase = "";
+        while (phrase.length < text.length) {
+            phrase += words[Math.floor(Math.random() * words.length)] + " ";
+        }
+        return phrase.trim().substring(0, text.length);
+    };
+
     // Si Entra Yoru, encriptamos el texto y lo dejamos así hasta el hover
     useEffect(() => {
         if (isYoru && !hasDecrypted) {
-            setDisplayText(
-                text.split("").map(char =>
-                    char === " " ? " " : CHARS[Math.floor(Math.random() * CHARS.length)]
-                ).join("")
-            );
+            setDisplayText(getScaryPhrase());
         } else {
             setDisplayText(text);
             setHasDecrypted(false);
         }
-    }, [isYoru, text, hasDecrypted]);
+    }, [isYoru, text, hasDecrypted, language]);
 
     const startDecryption = () => {
         if (!isYoru || isDecrypting || hasDecrypted) return;
@@ -49,6 +56,7 @@ export default function TextDecrypter({ text, speed = 30, className = "" }: Prop
 
         let iteration = 0;
         const maxIterations = text.length;
+        const targetGibberish = getScaryPhrase();
 
         clearInterval(intervalRef.current!);
 
@@ -59,7 +67,7 @@ export default function TextDecrypter({ text, speed = 30, className = "" }: Prop
                     if (index < iteration) {
                         return text[index];
                     }
-                    return CHARS[Math.floor(Math.random() * CHARS.length)];
+                    return targetGibberish[index] || YORU_CHARS[Math.floor(Math.random() * YORU_CHARS.length)];
                 }).join("");
             });
 
@@ -73,13 +81,13 @@ export default function TextDecrypter({ text, speed = 30, className = "" }: Prop
         }, speed);
     };
 
-    // Cleanup and auto-decrypt after 3 seconds for accessibility
+    // Cleanup and auto-decrypt after 3.5 seconds for accessibility
     useEffect(() => {
         const autoTimer = setTimeout(() => {
             if (isYoru && !hasDecrypted && !isDecrypting) {
                 startDecryption();
             }
-        }, 3000);
+        }, 3500);
 
         return () => {
             clearInterval(intervalRef.current!);
@@ -89,7 +97,7 @@ export default function TextDecrypter({ text, speed = 30, className = "" }: Prop
 
     return (
         <span
-            className={`${className} ${isDecrypting ? "animate-pulse text-[#DC143C]" : ""} origin-center transition-colors duration-100 cursor-crosshair`}
+            className={`${className} ${isDecrypting ? "animate-pulse text-[#DC143C]" : ""} origin-center transition-colors duration-100 cursor-crosshair break-all uppercase tracking-widest leading-none block md:inline`}
             onMouseEnter={startDecryption}
             onClick={startDecryption}
             onTouchStart={startDecryption}
