@@ -31,27 +31,31 @@ const creepster = Creepster({
 // ============================================================
 export const metadata: Metadata = {
   metadataBase: new URL("https://guilty-sanctuary.netlify.app"),
-  title: "Guilty Sanctuary — Asa Mitaka × Yoru Fan Experience",
+  title: {
+    default: "Guilty Sanctuary — Asa Mitaka × Yoru",
+    template: "%s | Guilty Sanctuary"
+  },
   description:
-    "Experimenta la dualidad de Asa Mitaka y el Demonio de la Guerra Yoru. " +
-    "Una fanpage interactiva de Chainsaw Man donde tu culpa alimenta el poder demoníaco.",
+    "Adéntrate en la dualidad de Asa Mitaka y el Demonio de la Guerra. Una experiencia interactiva de Chainsaw Man donde tu culpa tiene consecuencias reales.",
   keywords: [
     "Chainsaw Man",
     "Asa Mitaka",
     "Yoru",
     "War Devil",
-    "fanpage",
-    "interactiva",
-    "Tatsuki Fujimoto",
+    "Anime",
+    "Manga",
+    "Fan Experience",
+    "Interactive",
   ],
   manifest: "/manifest.json",
   icons: {
     icon: "/asa-icon.png",
+    shortcut: "/asa-icon.png",
     apple: "/asa-icon.png",
   },
   openGraph: {
-    title: "Guilty Sanctuary",
-    description: "Una fanpage inmersiva de Chainsaw Man. Tu culpa alimenta al Demonio de la Guerra.",
+    title: "Guilty Sanctuary — Asa Mitaka × Yoru",
+    description: "Tu culpa alimenta al Demonio de la Guerra. Vive la experiencia inmersiva de Chainsaw Man.",
     url: "https://guilty-sanctuary.netlify.app",
     siteName: "Guilty Sanctuary",
     images: [
@@ -59,7 +63,7 @@ export const metadata: Metadata = {
         url: "/images/ojosyoru.png",
         width: 1200,
         height: 630,
-        alt: "La mirada de Yoru",
+        alt: "Guilty Sanctuary - La mirada de Yoru",
       },
     ],
     locale: "es_ES",
@@ -67,9 +71,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Guilty Sanctuary — Chainsaw Man",
-    description: "Asa Mitaka × Yoru Fan Experience. Entra al santuario interactivo.",
+    title: "Guilty Sanctuary — Asa Mitaka × Yoru",
+    description: "Una experiencia fan inmersiva donde la culpa es el motor de la guerra.",
     images: ["/images/ojosyoru.png"],
+    creator: "@Dolvak12",
   },
 };
 
