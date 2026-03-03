@@ -16,52 +16,60 @@ export default function YoruMascot() {
     const { activePersona } = useGuilt();
     const isYoru = activePersona === "Yoru";
 
-    const [isVisible, setIsVisible] = useState(false);
-    const [spawnTop, setSpawnTop] = useState(50);
+    // Array de mascotas activas { id, top }
+    const [mascots, setMascots] = useState<{ id: number; top: number }[]>([]);
 
     useEffect(() => {
         if (!isYoru) {
-            setIsVisible(false);
+            setMascots([]);
             return;
         }
 
         let isMounted = true;
+        let mascotCount = 0; // Para generar IDs únicos
 
         const loopMascot = () => {
             if (!isMounted) return;
 
-            // Random chance to spawn
-            if (Math.random() > 0.1) {
-                setSpawnTop(Math.floor(Math.random() * 70) + 15);
-                setIsVisible(true);
+            // Random chance to spawn (Aumentado a 30% chance de salir tras los 2s)
+            if (Math.random() > 0.05) {
+                const newId = mascotCount++;
+                const newTop = Math.floor(Math.random() * 70) + 15;
 
-                // Hide after 15 seconds
+                // Agregamos la nueva mascot al array
+                setMascots(prev => [...prev, { id: newId, top: newTop }]);
+
+                // Cada mascota se borra de la pantalla tras 15 segundos
                 setTimeout(() => {
                     if (isMounted) {
-                        setIsVisible(false);
-                        // Wait 3 seconds before trying to spawn again
-                        setTimeout(loopMascot, 3000);
+                        setMascots(prev => prev.filter(m => m.id !== newId));
                     }
                 }, 15000);
+
+                // Esperamos un corto tiempo antes de posiblemente soltar a otra
+                // Esto permite tener varias en pantalla si el randomness pasa.
+                setTimeout(loopMascot, Math.random() * 3000 + 1000);
             } else {
-                // If it decides not to spawn, try again in 5 seconds
-                setTimeout(loopMascot, 5000);
+                // If it decides not to spawn, try again shortly
+                setTimeout(loopMascot, 2500);
             }
         };
 
         // Initial spawn quickly after entering Yoru Mode
-        const initialTimeout = setTimeout(loopMascot, 2000);
+        const initialTimeout = setTimeout(loopMascot, 1000);
 
         return () => {
             isMounted = false;
             clearTimeout(initialTimeout);
+            setMascots([]);
         };
     }, [isYoru]);
 
     return (
         <AnimatePresence>
-            {isVisible && (
+            {mascots.map((mascot) => (
                 <motion.div
+                    key={mascot.id}
                     initial={{ x: "120vw", y: "0vh", rotate: -10 }}
                     animate={{
                         x: "-50vw",
@@ -76,7 +84,7 @@ export default function YoruMascot() {
                         opacity: { duration: 1 }
                     }}
                     className="fixed z-[9000] pointer-events-none flex flex-col items-center -translate-y-1/2"
-                    style={{ top: `${spawnTop}%` }}
+                    style={{ top: `${mascot.top}%` }}
                 >
                     {/* Burbuja de Texto tipo Manga */}
                     <motion.div
@@ -106,7 +114,7 @@ export default function YoruMascot() {
                         />
                     </div>
                 </motion.div>
-            )}
+            ))}
         </AnimatePresence>
     );
 }

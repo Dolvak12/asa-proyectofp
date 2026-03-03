@@ -397,13 +397,29 @@ export default function Home() {
 
           <div className="h-8 w-[1px] bg-white/10" />
 
-          {/* Dedicated Codes Button */}
+          {/* Dedicated Codes Button (Enhance Visuals) */}
           <motion.button
             onClick={() => setShowSecretModal(true)}
             whileTap={{ scale: 0.8, y: -5 }}
-            className={`p-3 rounded-2xl transition-colors ${isYoru ? "text-[#DC143C]/40" : "text-[#1B263B]/30"}`}
+            animate={isYoru ? {
+              boxShadow: ["0 0 0px rgba(220,20,60,0)", "0 0 20px rgba(220,20,60,0.6)", "0 0 0px rgba(220,20,60,0)"]
+            } : {
+              boxShadow: ["0 0 0px rgba(255,215,0,0)", "0 0 15px rgba(255,215,0,0.4)", "0 0 0px rgba(255,215,0,0)"]
+            }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className={`
+                relative p-3 rounded-2xl transition-all group overflow-hidden
+                ${isYoru ? "bg-[#DC143C]/20 border border-[#DC143C]/50 text-[#DC143C]" : "bg-gradient-to-br from-[#1B263B]/10 to-[#1B263B]/30 border border-[#1B263B]/30 text-white shadow-inner"}
+            `}
           >
-            <span className="text-xl">🔑</span>
+            <span className="text-xl drop-shadow-md relative z-10 transition-transform group-hover:scale-110 block">🔑</span>
+
+            {/* Pequeño pulso expansivo de fondo */}
+            <motion.div
+              className={`absolute inset-0 rounded-2xl ${isYoru ? "bg-[#DC143C]/30" : "bg-[#FFD700]/20"}`}
+              animate={{ scale: [1, 1.5, 1], opacity: [0.8, 0, 0.8] }}
+              transition={{ repeat: Infinity, duration: 1.8 }}
+            />
           </motion.button>
 
           <div className="h-8 w-[1px] bg-white/10" />
