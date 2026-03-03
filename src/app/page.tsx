@@ -417,43 +417,6 @@ export default function Home() {
             onTouchEnd={handleMouseLeave}
             className="relative flex items-center justify-center"
           >
-            <AnimatePresence>
-              {showSecretModal && (
-                <motion.div
-                  initial={{ scale: 0.9, y: 20, opacity: 0 }}
-                  animate={{ scale: 1, y: 0, opacity: 1 }}
-                  exit={{ scale: 0.9, y: 20, opacity: 0 }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute bottom-full mb-8 left-1/2 -translate-x-1/2 bg-[#0A0A0A] border-4 border-[#DC143C] p-6 w-[85vw] max-w-sm shadow-[10px_10px_0px_#8B0000] z-[500]"
-                >
-                  <button
-                    onClick={() => setShowSecretModal(false)}
-                    className="absolute -top-3 -right-3 w-8 h-8 bg-[#DC143C] text-white flex items-center justify-center font-black rounded-full border-2 border-black"
-                  >
-                    X
-                  </button>
-                  <h3 className="text-[#DC143C] text-2xl font-black uppercase mb-4" style={{ fontFamily: "var(--font-creepster)" }}>
-                    {t["page.codes_title"][language]}
-                  </h3>
-                  <form onSubmit={handleSecretSubmit}>
-                    <input
-                      type="text"
-                      value={secretInput}
-                      onChange={(e) => setSecretInput(e.target.value)}
-                      placeholder="YORU, ASA, POCHITA..."
-                      className="w-full bg-black border-2 border-[#DC143C]/50 text-white p-3 font-mono uppercase focus:outline-none focus:border-[#DC143C] mb-4"
-                      autoFocus
-                    />
-                    <button
-                      type="submit"
-                      className="w-full bg-[#DC143C] text-white font-black p-3 hover:bg-[#8B0000] transition-colors"
-                    >
-                      {t["page.codes_execute"][language]}
-                    </button>
-                  </form>
-                </motion.div>
-              )}
-            </AnimatePresence>
             <motion.button
               onClick={handleCentralAction}
               whileTap={{ scale: 0.85, y: 8 }}
