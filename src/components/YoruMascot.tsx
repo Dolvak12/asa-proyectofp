@@ -50,21 +50,20 @@ export default function YoruMascot() {
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    initial={{ x: "120vw", y: "80vh", rotate: -10 }}
+                    initial={{ x: "120vw", y: "0vh", rotate: -10 }}
                     animate={{
-                        x: "-20vw",
-                        y: ["80vh", "75vh", "82vh", "78vh"],
+                        x: "-50vw",
+                        y: ["-5vh", "5vh", "-10vh", "10vh"],
                         rotate: [-10, 5, -5, 10]
                     }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{
-                        x: { duration: 8, ease: "linear" },
-                        y: { duration: 8, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
+                        x: { duration: 10, ease: "linear" },
+                        y: { duration: 10, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
                         rotate: { duration: 4, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
                         opacity: { duration: 1 }
                     }}
-                    className="fixed z-[9000] pointer-events-none flex flex-col items-center"
-                    style={{ bottom: "20vh" }}
+                    className="fixed z-[9000] pointer-events-none flex flex-col items-center top-[55%] md:top-[60%] -translate-y-1/2"
                 >
                     {/* Burbuja de Texto tipo Manga */}
                     <motion.div

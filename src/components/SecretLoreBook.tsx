@@ -29,8 +29,8 @@ export default function SecretLoreBook() {
     return (
         <>{/* Fragments handle multiple top-level elements */}
             {/* BUTTON CONTAINER (Higher Layer right above everything) */}
-            <div className="fixed top-24 right-4 z-[100] pointer-events-none md:top-32 md:right-8">
-                <div className="flex flex-col items-end gap-4 pointer-events-auto">
+            <div className="fixed top-28 right-4 z-[100] pointer-events-none md:top-32 md:right-8">
+                <div className="flex flex-col items-end gap-3 pointer-events-auto">
                     {/* Enlace al Diario de Asa */}
                     <AnimatePresence>
                         {showDiaryLink && (
@@ -42,7 +42,7 @@ export default function SecretLoreBook() {
                                 className="bg-white/90 border-2 border-[#1B263B] p-3 shadow-[4px_4px_0px_#1B263B] group hover:bg-[#1B263B] transition-colors"
                             >
                                 <span className="text-[#1B263B] group-hover:text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2">
-                                    📖 {t["nav.diary"][language]}
+                                    {t["nav.diary"][language]}
                                 </span>
                             </motion.button>
                         )}
@@ -59,7 +59,7 @@ export default function SecretLoreBook() {
                                 className="bg-black border-2 border-[#DC143C] p-3 shadow-[4px_4px_0px_#DC143C] group hover:bg-[#DC143C] transition-colors"
                             >
                                 <span className="text-[#DC143C] group-hover:text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2">
-                                    ⚔️ {t["nav.armory"][language]}
+                                    {t["nav.armory"][language]}
                                 </span>
                             </motion.button>
                         )}
