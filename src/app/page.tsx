@@ -30,7 +30,7 @@ import { useEffect, useState, useCallback } from "react";
 
 export default function Home() {
   const { guilt, isContractSigned, activePersona, combo, language } = useGuiltState();
-  const { resetGuilt, signContract, initAudio, playHeartbeat } = useGuiltActions();
+  const { resetGuilt, signContract, initAudio, playHeartbeat, addGuilt, incCombo } = useGuiltActions();
   const isYoru = activePersona === "Yoru";
   const t = TRANSLATIONS;
   const [isBooting, setIsBooting] = useState(true);
@@ -75,9 +75,11 @@ export default function Home() {
         }, 2000);
       }
     } else {
-      setShowSecretModal(true);
+      document.getElementById('interact')?.scrollIntoView({ behavior: 'smooth' });
+      incCombo();
+      addGuilt(10 + Math.floor(combo / 4));
     }
-  }, [guilt, isYoru, isPactInProgress, resetGuilt, signContract]);
+  }, [guilt, isYoru, isPactInProgress, resetGuilt, signContract, incCombo, addGuilt, combo]);
 
   const handleSecretSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -395,6 +397,17 @@ export default function Home() {
 
           <div className="h-8 w-[1px] bg-white/10" />
 
+          {/* Dedicated Codes Button */}
+          <motion.button
+            onClick={() => setShowSecretModal(true)}
+            whileTap={{ scale: 0.8, y: -5 }}
+            className={`p-3 rounded-2xl transition-colors ${isYoru ? "text-[#DC143C]/40" : "text-[#1B263B]/30"}`}
+          >
+            <span className="text-xl">🔑</span>
+          </motion.button>
+
+          <div className="h-8 w-[1px] bg-white/10" />
+
           {/* Main Action Button (Magnetic) */}
           <motion.div
             style={{ x: springX, y: springY }}
@@ -492,14 +505,14 @@ export default function Home() {
                 />
               )}
 
-              {/* Pact/Secret Instructions */}
+              {/* Pact Rules */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-[#DC143C] text-[10px] px-3 py-1.5 font-black uppercase tracking-[0.2em] border-2 border-[#DC143C] shadow-[4px_4px_0px_#DC143C]"
                 style={{ fontFamily: "var(--font-creepster)" }}
               >
-                {guilt === 100 && !isYoru && !isPactInProgress ? t["trigger.press_sign"][language] : t["page.codes_btn"][language]}
+                {guilt === 100 && !isYoru && !isPactInProgress ? t["trigger.press_sign"][language] : isYoru ? "FIN DEL SANTUARIO" : t["header.nav.sanctuary_asa"][language]}
               </motion.div>
             </motion.button>
           </motion.div>
