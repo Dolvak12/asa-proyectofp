@@ -24,7 +24,7 @@ import AtmosphericDust from "@/components/AtmosphericDust";
 import JumpscareOverlay from "@/components/JumpscareOverlay";
 import { useGuilt, useGuiltState, useGuiltActions } from "@/context/GuiltContext";
 import { motion, AnimatePresence, useScroll, useSpring, useMotionValue, useTransform } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export default function Home() {
   const { guilt, isContractSigned, activePersona, combo } = useGuiltState();
@@ -33,6 +33,8 @@ export default function Home() {
   const [isBooting, setIsBooting] = useState(true);
 
   const [isPactInProgress, setIsPactInProgress] = useState(false);
+  const [showSecretModal, setShowSecretModal] = useState(false);
+  const [secretInput, setSecretInput] = useState("");
 
   // Magnetic effect for central button
   const mouseX = useMotionValue(0);
@@ -56,7 +58,7 @@ export default function Home() {
     mouseY.set(0);
   };
 
-  const handleCentralAction = () => {
+  const handleCentralAction = useCallback(() => {
     if (isYoru) {
       resetGuilt();
     } else if (guilt === 100) {
@@ -70,8 +72,23 @@ export default function Home() {
         }, 2000);
       }
     } else {
-      addGuilt(20);
+      setShowSecretModal(true);
     }
+  }, [guilt, isYoru, isPactInProgress, resetGuilt, signContract]);
+
+  const handleSecretSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const code = secretInput.toUpperCase();
+
+    // Dispatch a fake keyboard event string so EasterEggListener picks it up
+    // Since EasterEggListener listens to window keydown, we can just simulate it
+    // Or simpler: dispatch individual keydown events for each character
+    code.split('').forEach(char => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: char }));
+    });
+
+    setShowSecretModal(false);
+    setSecretInput("");
   };
 
   // Progress bar for scroll flow
@@ -430,23 +447,21 @@ export default function Home() {
 
               {(isYoru || guilt === 100) && (
                 <motion.div
-                  className={`absolute inset-0 rounded-full ${isYoru || guilt === 100 ? "bg-red-500/20" : "bg-black/20"}`}
+                  className={`absolute inset-0 rounded-full ${isYoru || guilt === 100 ? "bg-[#DC143C]/30" : "bg-black/20"}`}
                   animate={{ scale: [1, 1.8, 1], opacity: [0.7, 0, 0.7] }}
                   transition={{ repeat: Infinity, duration: isPactInProgress ? 0.3 : 1.5 }}
                 />
               )}
 
-              {/* Pact Instructions */}
-              {guilt === 100 && !isYoru && !isPactInProgress && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-[#DC143C] text-[10px] px-3 py-1.5 font-black uppercase tracking-[0.2em] border-2 border-[#DC143C] shadow-[4px_4px_0px_#DC143C]"
-                  style={{ fontFamily: "var(--font-creepster)" }}
-                >
-                  PULSA PARA FIRMAR
-                </motion.div>
-              )}
+              {/* Pact/Secret Instructions */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-[#DC143C] text-[10px] px-3 py-1.5 font-black uppercase tracking-[0.2em] border-2 border-[#DC143C] shadow-[4px_4px_0px_#DC143C]"
+                style={{ fontFamily: "var(--font-creepster)" }}
+              >
+                {guilt === 100 && !isYoru && !isPactInProgress ? "PULSA PARA FIRMAR" : "CÓDIGOS"}
+              </motion.div>
             </motion.button>
           </motion.div>
 

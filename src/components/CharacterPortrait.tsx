@@ -101,7 +101,7 @@ export default function CharacterPortrait() {
         setIsRevealing(false);
     }
 
-    const currentData = slides[currentSlide];
+    const currentData = slides[currentSlide] || slides[0];
     const hasNextSlide = currentSlide < slides.length - 1;
 
     const handleReveal = useCallback(async () => {
@@ -143,7 +143,7 @@ export default function CharacterPortrait() {
                     transformStyle: "preserve-3d"
                 }}
                 className={`
-                    relative w-full max-w-[400px] aspect-[3/4] 
+                    relative w-[85vw] max-w-[320px] md:max-w-[400px] aspect-[3/4] 
                     bg-white border-[6px] md:border-[10px] border-black 
                     shadow-[20px_20px_0px_rgba(0,0,0,1)]
                     overflow-hidden transition-all duration-700

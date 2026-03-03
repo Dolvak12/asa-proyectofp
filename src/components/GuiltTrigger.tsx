@@ -135,7 +135,7 @@ export default function GuiltTrigger() {
             )}
 
             <div className={`
-                relative z-10 rounded-3xl p-8 md:p-12 overflow-hidden
+                relative z-10 rounded-3xl p-6 md:p-12 overflow-hidden
                 transition-all duration-700 
                 ${isYoru
                     ? "bg-black border-4 border-[#DC143C] shadow-[0_0_80px_rgba(220,20,60,0.4)]"
@@ -178,7 +178,7 @@ export default function GuiltTrigger() {
                     {!isYoru && guilt >= 100 ? (
                         <motion.button
                             onClick={handleSignContract}
-                            className="w-full py-6 text-2xl font-black bg-black text-white border-4 border-[#DC143C] shadow-[10px_10px_0px_#DC143C] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                            className="w-full py-4 md:py-6 text-xl md:text-2xl font-black bg-black text-white border-4 border-[#DC143C] shadow-[10px_10px_0px_#DC143C] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
                             whileHover={{ scale: 1.02 }}
                         >
                             ENTREGAR MI CUERPO
@@ -187,7 +187,7 @@ export default function GuiltTrigger() {
                         <motion.button
                             onClick={handleGuiltClick}
                             className={`
-                                px-10 py-5 text-lg font-black uppercase tracking-widest rounded-full
+                                px-6 py-4 md:px-10 md:py-5 text-sm md:text-lg font-black uppercase tracking-widest rounded-full
                                 transition-all duration-300
                                 ${isYoru
                                     ? "bg-[#DC143C] text-white shadow-[0_0_30px_#DC143C]"
@@ -226,7 +226,7 @@ export default function GuiltTrigger() {
                         <motion.div
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{ repeat: Infinity, duration: 0.3 }}
-                            className="text-white text-6xl md:text-9xl font-black mb-12 opacity-80"
+                            className="text-white text-5xl md:text-9xl font-black mb-12 opacity-80 text-center"
                             style={{ fontFamily: "var(--font-creepster)" }}
                         >
                             PACTO DE GUERRA
