@@ -17,6 +17,7 @@ export default function YoruMascot() {
     const isYoru = activePersona === "Yoru";
 
     const [isVisible, setIsVisible] = useState(false);
+    const [spawnTop, setSpawnTop] = useState(50);
 
     useEffect(() => {
         if (!isYoru) {
@@ -27,6 +28,8 @@ export default function YoruMascot() {
         // Aparece mucho más seguido (cada 10-15s) en modo Yoru
         const spawnMascot = () => {
             if (Math.random() > 0.1) {
+                // Posición vertical aleatoria entre el 15% y el 85% de la pantalla
+                setSpawnTop(Math.floor(Math.random() * 70) + 15);
                 setIsVisible(true);
                 // Se queda más tiempo en pantalla (e.g. 15 segundos)
                 setTimeout(() => {
@@ -63,7 +66,8 @@ export default function YoruMascot() {
                         rotate: { duration: 6, ease: "easeInOut", repeatType: "mirror", repeat: Infinity },
                         opacity: { duration: 1 }
                     }}
-                    className="fixed z-[9000] pointer-events-none flex flex-col items-center top-[55%] md:top-[60%] -translate-y-1/2"
+                    className="fixed z-[9000] pointer-events-none flex flex-col items-center -translate-y-1/2"
+                    style={{ top: `${spawnTop}%` }}
                 >
                     {/* Burbuja de Texto tipo Manga */}
                     <motion.div
