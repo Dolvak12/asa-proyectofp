@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⚔️ Guilty Sanctuary
 
-## Getting Started
+[![Next.js](https://img.shields.io/badge/Framework-Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Framer Motion](https://img.shields.io/badge/Animations-Framer_Motion-E10098?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
 
-First, run the development server:
+**Guilty Sanctuary** es una experiencia web interactiva e inmersiva basada en la Parte 2 de *Chainsaw Man*. Explora la fragilidad mental de **Asa Mitaka** y la presencia dominante del **Demonio de la Guerra (Yoru)** a través de una interfaz que reacciona a tus interacciones.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎭 La Experiencia Dual
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+El sitio web no es estático; habita la conciencia compartida de Asa y Yoru.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### ✧ Modo Asa (Santuario)
+Un espacio melancólico, limpio y minimalista. Refleja el deseo de Asa por una vida normal, cargada de culpa y monólogos internos.
+- **Visuales**: Bordes redondeados, colores claros, tipografía legible.
+- **Interacción**: Cada clic o interacción aumenta el medidor de culpa.
 
-## Learn More
+### ⚔️ Modo Yoru (Guerra)
+Al alcanzar el punto máximo de culpa, Yoru toma el control total del sitio.
+- **Visuales**: Estética agresiva, bordes afilados, colores rojo sangre y negro profundo, aberración cromática y efectos de glitch.
+- **Ambiente**: La música cambia, aparecen ojos observándote desde la oscuridad y la "Armería de Guerra" se desbloquea.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Características Principales
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Medidor de Culpa Dinámico**: Una barra de progreso persistente que rastrea tu interacción y desencadena la transformación del sitio.
+- **Morenita (Mascota)**: Un pequeño pececito (Mascota de Yoru) que navega aleatoriamente por la pantalla en modo Guerra, alentando a su señora.
+- **Text Decrypter**: Los pensamientos de Yoru aparecen encriptados y se revelan solo al pasar el cursor, simulando la intrusión demoníaca.
+- **Easter Eggs y Códigos**: Usa la llave **🔑** o el teclado para introducir códigos secretos (YORU, ASA, POCHITA) y desencadenar efectos especiales.
+- **Manga Haptics**: Transiciones cinemáticas tipo "slash" que imitan el paso de las hojas de un manga.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Configuración Técnica
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Requisitos
+- Node.js 18+ 
+- npm / yarn / pnpm
+
+### Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/Dolvak12/asa-proyectofp.git
+   ```
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+3. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+
+4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+
+---
+
+## 🏗️ Stack Tecnológico
+
+- **Framework**: Next.js 14 (App Router)
+- **Animaciones**: Framer Motion
+- **Estilos**: Tailwind CSS
+- **Estado Global**: React Context (GuiltContext)
+- **Audio**: Web Audio API / Hooks de audio personalizados
+
+---
+
+Realizado con 🖤 para los fans de Chainsaw Man.
