@@ -82,7 +82,7 @@ export default function OnboardingTutorial() {
             {!isAccepted && (
                 <motion.div
                     key="overlay"
-                    className="fixed inset-0 z-[999999] flex items-center justify-center p-6 bg-[#050505]"
+                    className="fixed inset-0 z-[999999] bg-[#050505] overflow-y-auto overflow-x-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
@@ -94,76 +94,86 @@ export default function OnboardingTutorial() {
                     {step === 0 ? (
                         // LANGUAGE SELECTION
                         <motion.div
-                            key="language-selector"
-                            className="relative max-w-sm w-full p-8 rounded-lg bg-[#EAE8E3] text-[#1B263B] shadow-[0_0_100px_rgba(255,255,255,0.05)] border border-[#1B263B]/20 text-center"
-                            style={{ backgroundImage: "radial-gradient(circle at center, #F5F5F0 0%, #DEDCD6 100%)" }}
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -20, opacity: 0 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            key="language-selector-wrapper"
+                            className="min-h-full w-full flex items-center justify-center p-4 py-12"
                         >
-                            <h2 className="text-sm font-black uppercase tracking-[0.3em] mb-8 border-b border-[#1B263B]/20 pb-4">
-                                Select Language /<br />Selecciona Idioma
-                            </h2>
-                            <div className="flex flex-col gap-4">
-                                <motion.button
-                                    onClick={() => handleSelectLanguage("en")}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-6 py-4 bg-[#1B263B] text-white text-xs uppercase font-bold tracking-widest hover:bg-black transition-colors"
-                                >
-                                    English
-                                </motion.button>
-                                <motion.button
-                                    onClick={() => handleSelectLanguage("es")}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-6 py-4 bg-[#1B263B] text-white text-xs uppercase font-bold tracking-widest hover:bg-black transition-colors"
-                                >
-                                    Español
-                                </motion.button>
-                            </div>
+                            <motion.div
+                                key="language-selector"
+                                className="relative max-w-sm w-full p-8 rounded-lg bg-[#EAE8E3] text-[#1B263B] shadow-[0_0_100px_rgba(255,255,255,0.05)] border border-[#1B263B]/20 text-center"
+                                style={{ backgroundImage: "radial-gradient(circle at center, #F5F5F0 0%, #DEDCD6 100%)" }}
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -20, opacity: 0 }}
+                                transition={{ duration: 0.8, ease: "easeOut" }}
+                            >
+                                <h2 className="text-sm font-black uppercase tracking-[0.3em] mb-8 border-b border-[#1B263B]/20 pb-4">
+                                    Select Language /<br />Selecciona Idioma
+                                </h2>
+                                <div className="flex flex-col gap-4">
+                                    <motion.button
+                                        onClick={() => handleSelectLanguage("en")}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-6 py-4 bg-[#1B263B] text-white text-xs uppercase font-bold tracking-widest hover:bg-black transition-colors"
+                                    >
+                                        English
+                                    </motion.button>
+                                    <motion.button
+                                        onClick={() => handleSelectLanguage("es")}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-6 py-4 bg-[#1B263B] text-white text-xs uppercase font-bold tracking-widest hover:bg-black transition-colors"
+                                    >
+                                        Español
+                                    </motion.button>
+                                </div>
+                            </motion.div>
                         </motion.div>
                     ) : (
                         // THE LETTER
                         <motion.div
-                            key="the-letter"
-                            className="relative max-w-lg w-full p-8 md:p-12 rounded-lg bg-[#EAE8E3] text-[#1B263B] shadow-[0_0_100px_rgba(255,255,255,0.05)] border border-[#1B263B]/20"
-                            style={{
-                                backgroundImage: "radial-gradient(circle at center, #F5F5F0 0%, #DEDCD6 100%)",
-                                boxShadow: "inset 0 0 40px rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.5)"
-                            }}
-                            initial={{ y: 50, rotateX: 10, opacity: 0 }}
-                            animate={{ y: 0, rotateX: 0, opacity: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                            key="the-letter-wrapper"
+                            className="min-h-full w-full flex items-center justify-center p-4 py-12"
                         >
-                            {/* Cinta falsa arriba */}
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-white/40 shadow-sm rotate-2"></div>
+                            <motion.div
+                                key="the-letter"
+                                className="relative max-w-lg w-full p-6 md:p-12 rounded-lg bg-[#EAE8E3] text-[#1B263B] shadow-[0_0_100px_rgba(255,255,255,0.05)] border border-[#1B263B]/20"
+                                style={{
+                                    backgroundImage: "radial-gradient(circle at center, #F5F5F0 0%, #DEDCD6 100%)",
+                                    boxShadow: "inset 0 0 40px rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.5)"
+                                }}
+                                initial={{ y: 50, rotateX: 10, opacity: 0 }}
+                                animate={{ y: 0, rotateX: 0, opacity: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                            >
+                                {/* Cinta falsa arriba */}
+                                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-white/40 shadow-sm rotate-2"></div>
 
-                            <p className="text-[10px] uppercase font-bold tracking-[0.3em] mb-8 opacity-40 border-b border-[#1B263B]/20 pb-2">
-                                {t.label}
-                            </p>
-
-                            <div className="space-y-6 text-sm md:text-base leading-loose" style={{ fontFamily: "var(--font-inter)" }}>
-                                <p>{t.p1}</p>
-                                <p>
-                                    {t.p2}<strong className="font-bold border-b border-red-500/30">{t.p2_bold}</strong>.
+                                <p className="text-[10px] uppercase font-bold tracking-[0.3em] mb-8 opacity-40 border-b border-[#1B263B]/20 pb-2">
+                                    {t.label}
                                 </p>
-                                <p className="italic opacity-80">{t.p3}</p>
-                                <p>{t.p4}</p>
-                            </div>
 
-                            <div className="mt-12 flex justify-center">
-                                <motion.button
-                                    onClick={handleAcceptance}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-3 bg-[#1B263B] text-white text-xs uppercase font-bold tracking-widest hover:bg-black transition-colors"
-                                >
-                                    {t.button}
-                                </motion.button>
-                            </div>
+                                <div className="space-y-4 md:space-y-6 text-sm md:text-base leading-relaxed md:leading-loose" style={{ fontFamily: "var(--font-inter)" }}>
+                                    <p>{t.p1}</p>
+                                    <p>
+                                        {t.p2}<strong className="font-bold border-b border-red-500/30">{t.p2_bold}</strong>.
+                                    </p>
+                                    <p className="italic opacity-80">{t.p3}</p>
+                                    <p>{t.p4}</p>
+                                </div>
+
+                                <div className="mt-8 md:mt-12 flex justify-center">
+                                    <motion.button
+                                        onClick={handleAcceptance}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-8 py-3 bg-[#1B263B] text-white text-xs uppercase font-bold tracking-widest hover:bg-black transition-colors"
+                                    >
+                                        {t.button}
+                                    </motion.button>
+                                </div>
+                            </motion.div>
                         </motion.div>
                     )}
                 </motion.div>
