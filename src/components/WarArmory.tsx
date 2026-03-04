@@ -146,7 +146,7 @@ export default function WarArmory() {
             <AnimatePresence>
                 {/* ... existing modal code ... */}
                 {selectedWeapon && (
-                    <div className="fixed inset-0 z-[500] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[500] overflow-y-auto overflow-x-hidden">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -155,62 +155,64 @@ export default function WarArmory() {
                             onClick={() => setSelectedWeapon(null)}
                         />
 
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className={`
-                                relative z-10 w-full max-w-4xl max-h-[90vh] overflow-hidden ${isYoru ? "rounded-none" : "rounded-3xl"} flex flex-col md:flex-row
-                                border shadow-2xl
+                        <div className="min-h-full w-full flex items-center justify-center p-4 py-12">
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                                animate={{ scale: 1, opacity: 1, y: 0 }}
+                                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                                className={`
+                                relative z-10 w-full max-w-4xl max-h-none md:max-h-[90vh] overflow-hidden ${isYoru ? "rounded-none" : "rounded-3xl"} flex flex-col md:flex-row
+                                border shadow-2xl shrink-0
                                 ${isYoru ? 'bg-[#0A0A0A] border-red-900/50' : 'bg-white border-blue-900/10'}
                             `}
-                        >
-                            {/* Close Button */}
-                            <button
-                                onClick={() => setSelectedWeapon(null)}
-                                className="absolute top-4 right-4 md:top-6 md:right-6 z-50 w-12 h-12 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors"
                             >
-                                ✕
-                            </button>
-
-                            {/* Image Part */}
-                            <div className="relative w-full md:w-1/2 aspect-square md:aspect-auto">
-                                <Image
-                                    src={`/assets/weapons/${selectedWeapon.image}`}
-                                    alt={selectedWeapon.name[language]}
-                                    fill
-                                    className="object-cover"
-                                />
-                                <div className={`absolute inset-0 ${isYoru ? 'mix-blend-multiply bg-red-900/20' : ''}`} />
-                            </div>
-
-                            {/* Info Part */}
-                            <div className="p-8 md:p-12 flex-1 flex flex-col justify-center">
-                                <span className={`text-[10px] uppercase font-bold tracking-[0.4em] mb-2 ${isYoru ? 'text-red-500' : 'text-blue-500'}`}>
-                                    {t["armory.devil_weapon"][language]}
-                                </span>
-                                <h1 className={`text-3xl md:text-5xl font-black mb-6 ${isYoru ? 'text-white' : 'text-black'}`}
-                                    style={{ fontFamily: isYoru ? 'var(--font-creepster)' : 'var(--font-inter)' }}
+                                {/* Close Button */}
+                                <button
+                                    onClick={() => setSelectedWeapon(null)}
+                                    className="absolute top-4 right-4 md:top-6 md:right-6 z-50 w-12 h-12 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors"
                                 >
-                                    {selectedWeapon.name[language]}
-                                </h1>
-                                <p className={`text-sm md:text-lg leading-relaxed mb-8 ${isYoru ? 'text-white/60' : 'text-black/60'}`}>
-                                    {selectedWeapon.description[language]}
-                                </p>
+                                    ✕
+                                </button>
 
-                                <div className={`pt-8 border-t ${isYoru ? 'border-red-900/30' : 'border-black/10'}`}>
-                                    <div className="flex items-center gap-4">
-                                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${isYoru ? 'bg-red-600' : 'bg-black text-white'}`}>
-                                            {isYoru ? "⚔" : "✦"}
-                                        </div>
-                                        <div>
-                                            <p className={`text-[10px] font-bold uppercase ${isYoru ? 'text-red-400' : 'text-black/40'}`}>{t["armory.owned_by"][language]}</p>
-                                            <p className={`text-sm font-bold ${isYoru ? 'text-red-500' : 'text-black'}`}>{isYoru ? 'YORU' : 'ASA MITAKA'}</p>
+                                {/* Image Part */}
+                                <div className="relative w-full md:w-1/2 aspect-square md:aspect-auto">
+                                    <Image
+                                        src={`/assets/weapons/${selectedWeapon.image}`}
+                                        alt={selectedWeapon.name[language]}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                    <div className={`absolute inset-0 ${isYoru ? 'mix-blend-multiply bg-red-900/20' : ''}`} />
+                                </div>
+
+                                {/* Info Part */}
+                                <div className="p-8 md:p-12 flex-1 flex flex-col justify-center">
+                                    <span className={`text-[10px] uppercase font-bold tracking-[0.4em] mb-2 ${isYoru ? 'text-red-500' : 'text-blue-500'}`}>
+                                        {t["armory.devil_weapon"][language]}
+                                    </span>
+                                    <h1 className={`text-3xl md:text-5xl font-black mb-6 ${isYoru ? 'text-white' : 'text-black'}`}
+                                        style={{ fontFamily: isYoru ? 'var(--font-creepster)' : 'var(--font-inter)' }}
+                                    >
+                                        {selectedWeapon.name[language]}
+                                    </h1>
+                                    <p className={`text-sm md:text-lg leading-relaxed mb-8 ${isYoru ? 'text-white/60' : 'text-black/60'}`}>
+                                        {selectedWeapon.description[language]}
+                                    </p>
+
+                                    <div className={`pt-8 border-t ${isYoru ? 'border-red-900/30' : 'border-black/10'}`}>
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${isYoru ? 'bg-red-600' : 'bg-black text-white'}`}>
+                                                {isYoru ? "⚔" : "✦"}
+                                            </div>
+                                            <div>
+                                                <p className={`text-[10px] font-bold uppercase ${isYoru ? 'text-red-400' : 'text-black/40'}`}>{t["armory.owned_by"][language]}</p>
+                                                <p className={`text-sm font-bold ${isYoru ? 'text-red-500' : 'text-black'}`}>{isYoru ? 'YORU' : 'ASA MITAKA'}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </motion.div>
+                            </motion.div>
+                        </div>
                     </div>
                 )}
             </AnimatePresence>

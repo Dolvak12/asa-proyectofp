@@ -74,37 +74,39 @@ export default function SecretLoreBook() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-white/40 backdrop-blur-md z-[20000] flex items-center justify-center p-4"
+                        className="fixed inset-0 bg-white/40 backdrop-blur-md z-[20000] overflow-y-auto overflow-x-hidden"
                         onClick={() => setIsDiaryOpen(false)}
                     >
-                        <motion.div
-                            initial={{ scale: 0.9, y: 30 }}
-                            animate={{ scale: 1, y: 0 }}
-                            className="bg-white border-4 border-black p-8 max-w-md w-full shadow-[20px_20px_0px_black] relative mx-4"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsDiaryOpen(false);
-                                }}
-                                className="absolute -top-2 -right-2 w-12 h-12 flex items-center justify-center bg-black text-white text-2xl font-black z-[20001] hover:bg-[#1B263B] transition-colors pointer-events-auto shadow-xl"
-                                aria-label="Cerrar diario"
+                        <div className="min-h-full w-full flex items-center justify-center p-4 py-12">
+                            <motion.div
+                                initial={{ scale: 0.9, y: 30 }}
+                                animate={{ scale: 1, y: 0 }}
+                                className="bg-white border-4 border-black p-8 max-w-md w-full shadow-[20px_20px_0px_black] relative mx-4 shrink-0"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                ✕
-                            </button>
-                            <h2 className="text-2xl font-black uppercase mb-6 border-b-2 border-black pb-2">{t["diary.title"][language]}</h2>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsDiaryOpen(false);
+                                    }}
+                                    className="absolute -top-2 -right-2 w-12 h-12 flex items-center justify-center bg-black text-white text-2xl font-black z-[20001] hover:bg-[#1B263B] transition-colors pointer-events-auto shadow-xl"
+                                    aria-label="Cerrar diario"
+                                >
+                                    ✕
+                                </button>
+                                <h2 className="text-2xl font-black uppercase mb-6 border-b-2 border-black pb-2">{t["diary.title"][language]}</h2>
 
-                            <div className="space-y-6 text-[#1B263B] italic font-medium leading-relaxed">
-                                <p className="relative group">
-                                    "{t["diary.p1_1"][language]} <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">{t["diary.p1_2"][language]}</span>"
-                                </p>
-                                <p className="relative group">
-                                    "{t["diary.p2_1"][language]} <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">{t["diary.p2_2"][language]}</span>"
-                                </p>
-                                <p className="text-xs opacity-40 uppercase tracking-tighter mt-4">{t["diary.hint"][language]}</p>
-                            </div>
-                        </motion.div>
+                                <div className="space-y-6 text-[#1B263B] italic font-medium leading-relaxed">
+                                    <p className="relative group">
+                                        "{t["diary.p1_1"][language]} <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">{t["diary.p1_2"][language]}</span>"
+                                    </p>
+                                    <p className="relative group">
+                                        "{t["diary.p2_1"][language]} <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" /> <span className="blur-[4px] group-hover:blur-0 transition-all select-none group-hover:select-text">{t["diary.p2_2"][language]}</span>"
+                                    </p>
+                                    <p className="text-xs opacity-40 uppercase tracking-tighter mt-4">{t["diary.hint"][language]}</p>
+                                </div>
+                            </motion.div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -116,81 +118,83 @@ export default function SecretLoreBook() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[20000] flex items-center justify-center p-4"
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[20000] overflow-y-auto overflow-x-hidden"
                         onClick={() => setIsArmoryOpen(false)}
                     >
-                        <motion.div
-                            initial={{ scale: 1.1, rotate: -5, x: 0 }}
-                            animate={{
-                                scale: 1,
-                                rotate: 0,
-                                x: [0, -10, 10, -5, 5, 0],
-                                transition: { x: { duration: 0.4, ease: "easeInOut" } }
-                            }}
-                            className="bg-[#0A0A0A] border-4 border-[#DC143C] p-8 max-w-2xl w-full shadow-[20px_20px_0px_#8B0000] relative mx-4 overflow-y-auto max-h-[90vh]"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsArmoryOpen(false);
+                        <div className="min-h-full w-full flex items-center justify-center p-4 py-12">
+                            <motion.div
+                                initial={{ scale: 1.1, rotate: -5, x: 0 }}
+                                animate={{
+                                    scale: 1,
+                                    rotate: 0,
+                                    x: [0, -10, 10, -5, 5, 0],
+                                    transition: { x: { duration: 0.4, ease: "easeInOut" } }
                                 }}
-                                className="absolute -top-2 -right-2 w-12 h-12 flex items-center justify-center bg-[#DC143C] text-white text-2xl font-black z-[20001] hover:bg-[#8B0000] transition-colors pointer-events-auto shadow-xl"
-                                aria-label="Cerrar armería"
+                                className="bg-[#0A0A0A] border-4 border-[#DC143C] p-8 max-w-2xl w-full shadow-[20px_20px_0px_#8B0000] relative mx-4 shrink-0"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                ✕
-                            </button>
-                            <h2 className="text-3xl font-black uppercase mb-6 text-[#DC143C]" style={{ fontFamily: "var(--font-creepster)" }}>{t["armory.title"][language]}</h2>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsArmoryOpen(false);
+                                    }}
+                                    className="absolute -top-2 -right-2 w-12 h-12 flex items-center justify-center bg-[#DC143C] text-white text-2xl font-black z-[20001] hover:bg-[#8B0000] transition-colors pointer-events-auto shadow-xl"
+                                    aria-label="Cerrar armería"
+                                >
+                                    ✕
+                                </button>
+                                <h2 className="text-3xl font-black uppercase mb-6 text-[#DC143C]" style={{ fontFamily: "var(--font-creepster)" }}>{t["armory.title"][language]}</h2>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {WEAPONS_DATA.map((weapon, idx) => {
-                                    const isUnlocked = weapons.includes(weapon.id);
-                                    return (
-                                        <motion.div
-                                            key={weapon.id}
-                                            whileHover={isUnlocked ? { scale: 1.02, rotate: 1 } : {}}
-                                            className={`border-2 p-4 transition-all group relative overflow-hidden ${isUnlocked
-                                                ? "border-[#DC143C] bg-[#1A0505]/40"
-                                                : "border-[#DC143C]/10 opacity-40 grayscale transition-all duration-300 md:group-hover:opacity-100 md:group-hover:grayscale-0 group-active:opacity-100 group-active:grayscale-0"
-                                                }`}
-                                        >
-                                            <div className="w-full h-40 bg-neutral-900 mb-4 flex items-center justify-center relative overflow-hidden">
-                                                {isUnlocked ? (
-                                                    <>
-                                                        <Image
-                                                            src={`/assets/weapons/${weapon.image}`}
-                                                            alt={weapon.name[language]}
-                                                            fill
-                                                            className="object-cover group-hover:scale-110 transition-transform duration-700"
-                                                        />
-                                                        {/* Slash Effect on Hover */}
-                                                        <motion.div
-                                                            className="absolute inset-0 bg-red-600/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                                                            style={{ clipPath: "polygon(0 45%, 100% 35%, 100% 55%, 0 65%)" }}
-                                                        />
-                                                    </>
-                                                ) : (
-                                                    <span className="text-[#DC143C]/10 text-xl font-black">{t["armory.locked"][language]}</span>
-                                                )}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {WEAPONS_DATA.map((weapon, idx) => {
+                                        const isUnlocked = weapons.includes(weapon.id);
+                                        return (
+                                            <motion.div
+                                                key={weapon.id}
+                                                whileHover={isUnlocked ? { scale: 1.02, rotate: 1 } : {}}
+                                                className={`border-2 p-4 transition-all group relative overflow-hidden ${isUnlocked
+                                                    ? "border-[#DC143C] bg-[#1A0505]/40"
+                                                    : "border-[#DC143C]/10 opacity-40 grayscale transition-all duration-300 md:group-hover:opacity-100 md:group-hover:grayscale-0 group-active:opacity-100 group-active:grayscale-0"
+                                                    }`}
+                                            >
+                                                <div className="w-full h-40 bg-neutral-900 mb-4 flex items-center justify-center relative overflow-hidden">
+                                                    {isUnlocked ? (
+                                                        <>
+                                                            <Image
+                                                                src={`/assets/weapons/${weapon.image}`}
+                                                                alt={weapon.name[language]}
+                                                                fill
+                                                                className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                                            />
+                                                            {/* Slash Effect on Hover */}
+                                                            <motion.div
+                                                                className="absolute inset-0 bg-red-600/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                                                style={{ clipPath: "polygon(0 45%, 100% 35%, 100% 55%, 0 65%)" }}
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <span className="text-[#DC143C]/10 text-xl font-black">{t["armory.locked"][language]}</span>
+                                                    )}
 
-                                                {/* Onomatopoeia on Hover */}
-                                                <div className="absolute top-2 right-2 text-xs font-black text-[#DC143C] opacity-0 group-hover:opacity-100 transition-opacity italic z-20">
-                                                    {isUnlocked ? "ズバッ!" : "..."}
+                                                    {/* Onomatopoeia on Hover */}
+                                                    <div className="absolute top-2 right-2 text-xs font-black text-[#DC143C] opacity-0 group-hover:opacity-100 transition-opacity italic z-20">
+                                                        {isUnlocked ? "ズバッ!" : "..."}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <h3 className="font-black text-[#DC143C] uppercase mb-1 flex justify-between items-center">
-                                                {weapon.name[language]}
-                                                {!isUnlocked && <span className="text-[8px] opacity-40">Lvl {weapon.unlockAt}%</span>}
-                                            </h3>
-                                            <p className="text-[10px] text-white/50 leading-tight">
-                                                {isUnlocked ? <TextDecrypter text={weapon.description[language]} /> : t["armory.hidden_desc"][language]}
-                                            </p>
-                                        </motion.div>
-                                    );
-                                })}
-                            </div>
-                            <p className="text-[10px] text-[#DC143C]/40 uppercase mt-6 tracking-[0.3em]"><TextDecrypter text={t["armory.footer"][language]} /></p>
-                        </motion.div>
+                                                <h3 className="font-black text-[#DC143C] uppercase mb-1 flex justify-between items-center">
+                                                    {weapon.name[language]}
+                                                    {!isUnlocked && <span className="text-[8px] opacity-40">Lvl {weapon.unlockAt}%</span>}
+                                                </h3>
+                                                <p className="text-[10px] text-white/50 leading-tight">
+                                                    {isUnlocked ? <TextDecrypter text={weapon.description[language]} /> : t["armory.hidden_desc"][language]}
+                                                </p>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                                <p className="text-[10px] text-[#DC143C]/40 uppercase mt-6 tracking-[0.3em]"><TextDecrypter text={t["armory.footer"][language]} /></p>
+                            </motion.div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

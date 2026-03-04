@@ -229,55 +229,57 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[20000] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[20000] bg-black/80 backdrop-blur-sm overflow-y-auto overflow-x-hidden"
           >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className={`
-                w-full max-w-sm relative p-8
-                ${isYoru ? "bg-[#0A0A0A] border-4 border-[#DC143C] shadow-[10px_10px_0px_#8B0000]" : "bg-white border-4 border-[#1B263B] shadow-[10px_10px_0px_#1B263B]"}
-              `}
-            >
-              <button
-                onClick={() => setShowSecretModal(false)}
-                className={`absolute -top-12 -right-4 text-2xl font-black ${isYoru ? "text-[#DC143C]" : "text-white"}`}
+            <div className="min-h-full w-full flex items-center justify-center p-4 py-12">
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                className={`
+                  w-full max-w-sm relative p-8 shrink-0
+                  ${isYoru ? "bg-[#0A0A0A] border-4 border-[#DC143C] shadow-[10px_10px_0px_#8B0000]" : "bg-white border-4 border-[#1B263B] shadow-[10px_10px_0px_#1B263B]"}
+                `}
               >
-                ✕
-              </button>
+                <button
+                  onClick={() => setShowSecretModal(false)}
+                  className={`absolute -top-12 -right-4 text-2xl font-black ${isYoru ? "text-[#DC143C]" : "text-white"}`}
+                >
+                  ✕
+                </button>
 
-              <h3
-                className={`text-2xl font-black uppercase mb-6 tracking-tighter ${isYoru ? "text-[#DC143C]" : "text-[#1B263B]"}`}
-                style={{ fontFamily: isYoru ? "var(--font-creepster)" : "var(--font-inter)" }}
-              >
-                {isYoru ? "INTRODUCE EL CÓDIGO" : "CÓDIGOS SECRETOS"}
-              </h3>
+                <h3
+                  className={`text-2xl font-black uppercase mb-6 tracking-tighter ${isYoru ? "text-[#DC143C]" : "text-[#1B263B]"}`}
+                  style={{ fontFamily: isYoru ? "var(--font-creepster)" : "var(--font-inter)" }}
+                >
+                  {isYoru ? "INTRODUCE EL CÓDIGO" : "CÓDIGOS SECRETOS"}
+                </h3>
 
-              <form onSubmit={handleSecretSubmit}>
-                <input
-                  autoFocus
-                  placeholder="YORU, ASA, POCHITA..."
-                  value={secretInput}
-                  onChange={(e) => setSecretInput(e.target.value)}
-                  className={`
+                <form onSubmit={handleSecretSubmit}>
+                  <input
+                    autoFocus
+                    placeholder="YORU, ASA, POCHITA..."
+                    value={secretInput}
+                    onChange={(e) => setSecretInput(e.target.value)}
+                    className={`
                     w-full p-4 mb-4 font-mono uppercase text-sm
                     bg-transparent border-2 outline-none transition-colors
                     ${isYoru ? "border-[#DC143C]/30 text-white focus:border-[#DC143C]" : "border-[#1B263B]/20 text-[#1B263B] focus:border-[#1B263B]"}
                   `}
-                  type="text"
-                />
-                <button
-                  type="submit"
-                  className={`
+                    type="text"
+                  />
+                  <button
+                    type="submit"
+                    className={`
                     w-full p-4 font-black uppercase tracking-[0.2em] transition-all
                     ${isYoru ? "bg-[#DC143C] text-white hover:bg-[#8B0000]" : "bg-[#1B263B] text-white hover:bg-[#2D4A7A]"}
                   `}
-                >
-                  EJECUTAR
-                </button>
-              </form>
-            </motion.div>
+                  >
+                    EJECUTAR
+                  </button>
+                </form>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
